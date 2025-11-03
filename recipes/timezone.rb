@@ -8,8 +8,7 @@
 
 timezone = node['time']['timezone']
 
-case node['platform_family']
-when 'windows'
+if platform_family?('windows')
   # Windows timezone configuration
   powershell_script 'set_timezone' do
     code <<-EOH
@@ -43,7 +42,7 @@ else
       only_if { ::File.exist?('/usr/bin/timedatectl') }
       not_if "timedatectl status | grep -q 'Time zone: #{timezone}'"
     end
-    
+
     # Fallback for older systems without timedatectl
     file '/etc/timezone' do
       content "#{timezone}\n"
@@ -52,7 +51,7 @@ else
       group 'root'
       not_if { ::File.exist?('/usr/bin/timedatectl') }
     end
-    
+
     link '/etc/localtime' do
       to "/usr/share/zoneinfo/#{timezone}"
       not_if { ::File.exist?('/usr/bin/timedatectl') }
@@ -66,7 +65,7 @@ else
       only_if { ::File.exist?('/usr/bin/timedatectl') }
       not_if "timedatectl status | grep -q 'Time zone: #{timezone}'"
     end
-    
+
     # Fallback for older systems
     file '/etc/timezone' do
       content "#{timezone}\n"
@@ -76,13 +75,13 @@ else
       not_if { ::File.exist?('/usr/bin/timedatectl') }
       notifies :run, 'execute[reconfigure_tzdata]', :immediately
     end
-    
+
     execute 'reconfigure_tzdata' do
       command 'dpkg-reconfigure -f noninteractive tzdata'
       action :nothing
       not_if { ::File.exist?('/usr/bin/timedatectl') }
     end
-    
+
     link '/etc/localtime' do
       to "/usr/share/zoneinfo/#{timezone}"
       not_if { ::File.exist?('/usr/bin/timedatectl') }
@@ -95,7 +94,7 @@ else
       to "/usr/share/zoneinfo/#{timezone}"
       only_if { ::File.exist?("/usr/share/zoneinfo/#{timezone}") }
     end
-    
+
     file '/etc/timezone' do
       content "#{timezone}\n"
       mode '0644'

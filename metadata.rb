@@ -3,7 +3,6 @@ maintainer 'Your Name'
 maintainer_email 'your.email@example.com'
 license 'Apache-2.0'
 description 'Installs/Configures NTP and timezone settings for Windows and Linux'
-long_description 'This cookbook manages NTP services and timezone configuration across Windows and Linux platforms'
 version '1.0.0'
 chef_version '>= 16.0'
 

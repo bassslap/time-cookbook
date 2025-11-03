@@ -9,16 +9,7 @@
 ntp_servers = node['time']['ntp_servers']
 
 # Determine the correct ntp package name based on platform
-ntp_package = case node['platform_family']
-              when 'debian'
-                'ntp'
-              when 'rhel', 'fedora', 'amazon'
-                'ntp'
-              when 'suse'
-                'ntp'
-              else
-                'ntp'
-              end
+ntp_package = 'ntp'
 
 # Install NTP package
 package ntp_package do

@@ -1,0 +1,59 @@
+---
+driver:
+  name: docker
+  privileged: true
+  use_sudo: false
+
+provisioner:
+  name: chef_zero
+  product_name: chef
+  install_strategy: always
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-20.04
+    driver_config:
+      image: ubuntu:20.04
+      platform: ubuntu
+      run_command: /sbin/init
+      provision_command:
+        - apt-get update
+        - apt-get install -y sudo curl systemd
+  
+  - name: centos-8
+    driver_config:
+      image: quay.io/centos/centos:stream8
+      platform: rhel
+      run_command: /usr/sbin/init
+      provision_command:
+        - yum install -y sudo curl systemd
+        - systemctl enable systemd-timesyncd || true
+
+suites:
+  - name: default
+    run_list:
+      - recipe[time-cookbook::default]
+    attributes:
+      time:
+        timezone: "America/New_York"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+  
+  - name: chrony
+    run_list:
+      - recipe[time-cookbook::default]
+    includes:
+      - ubuntu-20.04
+      - centos-8
+    attributes:
+      time:
+        timezone: "Europe/London"
+        linux:
+          use_chrony: true
+          prefer_ntpd: false
+        ntp_servers:
+          - "0.europe.pool.ntp.org"
+          - "1.europe.pool.ntp.org"

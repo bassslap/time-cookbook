@@ -14,4 +14,4 @@ include_recipe 'time-cookbook::timezone'
 # Configure NTP
 include_recipe 'time-cookbook::ntp'
 
-Chef::Log.info("Time configuration completed successfully")
+Chef::Log.info('Time configuration completed successfully')

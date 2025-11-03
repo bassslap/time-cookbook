@@ -4,28 +4,28 @@
 default['time']['timezone'] = 'UTC'
 
 # NTP servers - use platform-specific defaults
-case node['platform_family']
-when 'windows'
-  default['time']['ntp_servers'] = [
-    'time.windows.com',
-    'time.nist.gov',
-    'pool.ntp.org'
-  ]
-when 'rhel', 'fedora', 'amazon'
-  default['time']['ntp_servers'] = [
-    '0.pool.ntp.org',
-    '1.pool.ntp.org',
-    '2.pool.ntp.org',
-    '3.pool.ntp.org'
-  ]
-else
-  default['time']['ntp_servers'] = [
-    '0.pool.ntp.org',
-    '1.pool.ntp.org',
-    '2.pool.ntp.org',
-    '3.pool.ntp.org'
-  ]
-end
+default['time']['ntp_servers'] = case node['platform_family']
+                                 when 'windows'
+                                   [
+                                     'time.windows.com',
+                                     'time.nist.gov',
+                                     'pool.ntp.org',
+                                   ]
+                                 when 'rhel', 'fedora', 'amazon'
+                                   [
+                                     '0.pool.ntp.org',
+                                     '1.pool.ntp.org',
+                                     '2.pool.ntp.org',
+                                     '3.pool.ntp.org',
+                                   ]
+                                 else
+                                   [
+                                     '0.pool.ntp.org',
+                                     '1.pool.ntp.org',
+                                     '2.pool.ntp.org',
+                                     '3.pool.ntp.org',
+                                   ]
+                                 end
 
 # NTP service configuration
 default['time']['ntp_service_enabled'] = true
@@ -35,7 +35,7 @@ default['time']['ntp_service_action'] = [:enable, :start]
 default['time']['windows']['w32time_config'] = {
   'NtpServer' => default['time']['ntp_servers'].join(',0x1 ') + ',0x1',
   'Type' => 'NTP',
-  'Enabled' => 1
+  'Enabled' => 1,
 }
 
 # Linux specific

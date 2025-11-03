@@ -20,19 +20,19 @@ powershell_script 'configure_w32time_ntp' do
     try {
       # Stop the service to make configuration changes
       Stop-Service w32time -Force -ErrorAction SilentlyContinue
-      
+    #{'  '}
       # Configure NTP servers
       w32tm /config /manualpeerlist:"#{w32time_config['NtpServer']}" /syncfromflags:manual /reliable:YES /update
-      
+    #{'  '}
       # Set service to automatic start
       Set-Service w32time -StartupType Automatic
-      
+    #{'  '}
       # Start the service
       Start-Service w32time
-      
+    #{'  '}
       # Force immediate sync
       w32tm /resync /force
-      
+    #{'  '}
       Write-Host "W32Time configured successfully with servers: #{ntp_servers.join(', ')}"
     } catch {
       Write-Error "Failed to configure W32Time: $($_.Exception.Message)"
