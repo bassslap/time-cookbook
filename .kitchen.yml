@@ -1,0 +1,64 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+  product_name: chef
+  install_strategy: always
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-20.04
+  - name: ubuntu-18.04
+  - name: centos-8
+  - name: centos-7
+  - name: windows-2019
+    driver:
+      box: gusztavvargadr/windows-server-2019-standard
+      communicator: winrm
+      customize:
+        memory: 2048
+        cpus: 2
+
+suites:
+  - name: default
+    run_list:
+      - recipe[time-cookbook::default]
+    attributes:
+      time:
+        timezone: "America/New_York"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+          - "2.pool.ntp.org"
+  
+  - name: chrony
+    run_list:
+      - recipe[time-cookbook::default]
+    includes:
+      - ubuntu-20.04
+      - centos-8
+    attributes:
+      time:
+        timezone: "Europe/London"
+        linux:
+          use_chrony: true
+          prefer_ntpd: false  # Override default to test chrony
+        ntp_servers:
+          - "0.europe.pool.ntp.org"
+          - "1.europe.pool.ntp.org"
+  
+  - name: windows
+    run_list:
+      - recipe[time-cookbook::default]
+    includes:
+      - windows-2019
+    attributes:
+      time:
+        timezone: "Pacific Standard Time"
+        ntp_servers:
+          - "time.windows.com"
+          - "time.nist.gov"
