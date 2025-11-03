@@ -8,6 +8,7 @@ provisioner:
   name: chef_zero
   product_name: chef
   install_strategy: always
+  chef_license: accept-silent
 
 verifier:
   name: inspec
@@ -17,10 +18,16 @@ platforms:
     driver_config:
       image: ubuntu:20.04
       platform: ubuntu
-      run_command: /sbin/init
+      run_command: /bin/systemd
       provision_command:
         - apt-get update
-        - apt-get install -y sudo curl systemd
+        - apt-get install -y sudo curl wget systemd systemd-sysv
+        - systemctl set-default multi-user.target
+      volume:
+        - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      tmpfs:
+        - /run
+        - /tmp
   
   - name: centos-8
     driver_config:
@@ -28,8 +35,10 @@ platforms:
       platform: rhel
       run_command: /usr/sbin/init
       provision_command:
-        - yum install -y sudo curl systemd
+        - yum install -y sudo curl wget systemd
         - systemctl enable systemd-timesyncd || true
+      volume:
+        - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
 suites:
   - name: default
@@ -41,6 +50,7 @@ suites:
         ntp_servers:
           - "0.pool.ntp.org"
           - "1.pool.ntp.org"
+          - "2.pool.ntp.org"
   
   - name: chrony
     run_list:
