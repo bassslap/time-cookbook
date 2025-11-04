@@ -2,8 +2,8 @@
 driver:
   name: ec2
   aws_ssh_key_id: <%= ENV['AWS_SSH_KEY_NAME'] || 'chef-testing' %>
-  region: <%= ENV['AWS_REGION'] || 'us-west-2' %>
-  availability_zone: <%= ENV['AWS_REGION'] || 'us-west-2' %>a
+  region: <%= ENV['AWS_REGION'] || 'us-east-1' %>
+  availability_zone: <%= ENV['AWS_REGION'] || 'us-east-1' %>a
   require_chef_omnibus: true
   subnet_id: <%= ENV['AWS_SUBNET_ID'] %>
   security_group_ids: <%= ENV['AWS_SECURITY_GROUP_ID'] %>
@@ -12,7 +12,7 @@ driver:
   interface: dns
   tags:
     Project: 'chef-cookbook-testing'
-    Cookbook: 'time-cookbook'
+    Cookbook: 'enterprise-time'
     CreatedBy: 'test-kitchen'
 
 provisioner:
@@ -27,28 +27,28 @@ verifier:
 platforms:
   - name: ubuntu-20.04
     driver:
-      image_id: ami-0c2d3e23b7708db96  # Ubuntu 20.04 LTS us-west-2
+      image_id: ami-0fb0b230890ccd1e6  # Ubuntu 20.04 LTS us-east-1
       transport:
         username: ubuntu
-        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/id_rsa' %>
+        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
   
   - name: centos-8
     driver:
-      image_id: ami-0686851c4e7b1a8e1  # CentOS 8 us-west-2
+      image_id: ami-0b17d05c24d03b9c8  # CentOS 8 us-east-1
       transport:
         username: centos
-        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/id_rsa' %>
+        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
   
   - name: amazon-linux-2
     driver:
-      image_id: ami-0c94855ba95b798c7  # Amazon Linux 2 us-west-2
+      image_id: ami-0601422bf6afa8ac3  # Amazon Linux 2 us-east-1 (latest)
       transport:
         username: ec2-user
-        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/id_rsa' %>
+        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
         
   - name: windows-2019
     driver:
-      image_id: ami-0c2b0d3fb02824d92  # Windows Server 2019 us-west-2
+      image_id: ami-0c2d3e23b7708db96  # Windows Server 2019 us-east-1
       transport:
         name: winrm
         username: administrator
@@ -57,7 +57,7 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[time-cookbook::default]
+      - recipe[enterprise-time::default]
     attributes:
       time:
         timezone: "America/Los_Angeles"
@@ -68,7 +68,7 @@ suites:
   
   - name: enterprise
     run_list:
-      - recipe[time-cookbook::default]
+      - recipe[enterprise-time::default]
     includes:
       - ubuntu-20.04
       - centos-8
@@ -83,7 +83,7 @@ suites:
   
   - name: windows-test
     run_list:
-      - recipe[time-cookbook::default]
+      - recipe[enterprise-time::default]
     includes:
       - windows-2019
     attributes:
@@ -93,3 +93,14 @@ suites:
           - "time.windows.com"
           - "time.nist.gov"
           - "pool.ntp.org"
+  
+  - name: supermarket
+    run_list:
+      - recipe[enterprise-time::default]
+    attributes:
+      time:
+        timezone: "America/New_York"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+          - "2.pool.ntp.org"

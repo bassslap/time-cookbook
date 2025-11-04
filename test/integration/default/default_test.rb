@@ -1,4 +1,4 @@
-# InSpec test for time-cookbook
+# InSpec test for enterprise-time cookbook
 
 describe 'Time and NTP configuration' do
   context 'when on Windows' do
@@ -55,7 +55,7 @@ describe 'Time and NTP configuration' do
     end
 
     # Check NTP configuration files
-    if service(ntp_service).name == 'chronyd'
+    if ntp_service == 'chronyd'
       describe file('/etc/chrony.conf') do
         it { should exist }
         it { should be_file }

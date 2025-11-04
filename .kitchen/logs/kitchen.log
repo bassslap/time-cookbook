@@ -1,60 +1,14 @@
-E, [2025-11-03T14:01:34.991580 #13897] ERROR -- Kitchen: ------Exception-------
-E, [2025-11-03T14:01:34.991636 #13897] ERROR -- Kitchen: Class: Kitchen::ClientError
-E, [2025-11-03T14:01:34.991649 #13897] ERROR -- Kitchen: Message: Could not load the 'docker' driver from the load path. Did you mean: azurerm, digitalocean, dokken, dummy, ec2, exec, gce, hyperv, openstack, proxy, ssh_base, vagrant, vcenter, vra ? Please ensure that your driver is installed as a gem or included in your Gemfile if using Bundler.
-E, [2025-11-03T14:01:34.991656 #13897] ERROR -- Kitchen: ----------------------
-E, [2025-11-03T14:01:34.991663 #13897] ERROR -- Kitchen: ------Backtrace-------
-E, [2025-11-03T14:01:34.991669 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/plugin.rb:55:in `rescue in load'
-E, [2025-11-03T14:01:34.991675 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/plugin.rb:33:in `load'
-E, [2025-11-03T14:01:34.991681 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/driver.rb:37:in `for_plugin'
-E, [2025-11-03T14:01:34.991687 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:235:in `new_driver'
-E, [2025-11-03T14:01:34.991693 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:250:in `new_instance'
-E, [2025-11-03T14:01:34.991698 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:143:in `block in build_instances'
-E, [2025-11-03T14:01:34.991704 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:142:in `map'
-E, [2025-11-03T14:01:34.991709 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:142:in `with_index'
-E, [2025-11-03T14:01:34.991715 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:142:in `build_instances'
-E, [2025-11-03T14:01:34.991720 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:116:in `instances'
-E, [2025-11-03T14:01:34.991726 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/command.rb:109:in `filtered_instances'
-E, [2025-11-03T14:01:34.991731 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/command.rb:139:in `parse_subcommand'
-E, [2025-11-03T14:01:34.991737 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/command/list.rb:29:in `call'
-E, [2025-11-03T14:01:34.991742 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/cli.rb:52:in `perform'
-E, [2025-11-03T14:01:34.991747 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/cli.rb:120:in `list'
-E, [2025-11-03T14:01:34.991753 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.2.2/lib/thor/command.rb:27:in `run'
-E, [2025-11-03T14:01:34.991758 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.2.2/lib/thor/invocation.rb:127:in `invoke_command'
-E, [2025-11-03T14:01:34.991764 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.2.2/lib/thor.rb:392:in `dispatch'
-E, [2025-11-03T14:01:34.991769 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.2.2/lib/thor/base.rb:485:in `start'
-E, [2025-11-03T14:01:34.991774 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/bin/kitchen:11:in `block in <top (required)>'
-E, [2025-11-03T14:01:34.991785 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/errors.rb:183:in `with_friendly_errors'
-E, [2025-11-03T14:01:34.991791 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/bin/kitchen:11:in `<top (required)>'
-E, [2025-11-03T14:01:34.991796 #13897] ERROR -- Kitchen: /usr/local/bin/kitchen:446:in `load'
-E, [2025-11-03T14:01:34.991801 #13897] ERROR -- Kitchen: /usr/local/bin/kitchen:446:in `<main>'
-E, [2025-11-03T14:01:34.991806 #13897] ERROR -- Kitchen: ----End Backtrace-----
-E, [2025-11-03T14:01:34.991812 #13897] ERROR -- Kitchen: ---Nested Exception---
-E, [2025-11-03T14:01:34.991817 #13897] ERROR -- Kitchen: Class: LoadError
-E, [2025-11-03T14:01:34.991822 #13897] ERROR -- Kitchen: Message: cannot load such file -- kitchen/driver/docker
-E, [2025-11-03T14:01:34.991827 #13897] ERROR -- Kitchen: ----------------------
-E, [2025-11-03T14:01:34.991833 #13897] ERROR -- Kitchen: ------Backtrace-------
-E, [2025-11-03T14:01:34.991838 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/plugin.rb:55:in `rescue in load'
-E, [2025-11-03T14:01:34.991843 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/plugin.rb:33:in `load'
-E, [2025-11-03T14:01:34.991849 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/driver.rb:37:in `for_plugin'
-E, [2025-11-03T14:01:34.991854 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:235:in `new_driver'
-E, [2025-11-03T14:01:34.991859 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:250:in `new_instance'
-E, [2025-11-03T14:01:34.991864 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:143:in `block in build_instances'
-E, [2025-11-03T14:01:34.991869 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:142:in `map'
-E, [2025-11-03T14:01:34.991875 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:142:in `with_index'
-E, [2025-11-03T14:01:34.991880 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:142:in `build_instances'
-E, [2025-11-03T14:01:34.991886 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/config.rb:116:in `instances'
-E, [2025-11-03T14:01:34.991891 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/command.rb:109:in `filtered_instances'
-E, [2025-11-03T14:01:34.991896 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/command.rb:139:in `parse_subcommand'
-E, [2025-11-03T14:01:34.991902 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/command/list.rb:29:in `call'
-E, [2025-11-03T14:01:34.991907 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/cli.rb:52:in `perform'
-E, [2025-11-03T14:01:34.991913 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/cli.rb:120:in `list'
-E, [2025-11-03T14:01:34.991918 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.2.2/lib/thor/command.rb:27:in `run'
-E, [2025-11-03T14:01:34.991924 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.2.2/lib/thor/invocation.rb:127:in `invoke_command'
-E, [2025-11-03T14:01:34.991929 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.2.2/lib/thor.rb:392:in `dispatch'
-E, [2025-11-03T14:01:34.991938 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.2.2/lib/thor/base.rb:485:in `start'
-E, [2025-11-03T14:01:34.991943 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/bin/kitchen:11:in `block in <top (required)>'
-E, [2025-11-03T14:01:34.991949 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/lib/kitchen/errors.rb:183:in `with_friendly_errors'
-E, [2025-11-03T14:01:34.991954 #13897] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.7.0/bin/kitchen:11:in `<top (required)>'
-E, [2025-11-03T14:01:34.991959 #13897] ERROR -- Kitchen: /usr/local/bin/kitchen:446:in `load'
-E, [2025-11-03T14:01:34.991964 #13897] ERROR -- Kitchen: /usr/local/bin/kitchen:446:in `<main>'
-E, [2025-11-03T14:01:34.991969 #13897] ERROR -- Kitchen: ----End Backtrace-----
+I, [2025-11-04T10:34:37.509150 #6335]  INFO -- Kitchen: -----> Starting Test Kitchen (v3.7.0)
+I, [2025-11-04T10:34:42.075475 #6335]  INFO -- Kitchen: -----> Destroying <default-ubuntu-2004>...
+I, [2025-11-04T10:34:42.077153 #6335]  INFO -- Kitchen: -----> Destroying <default-centos-8>...
+I, [2025-11-04T10:34:42.078114 #6335]  INFO -- Kitchen: -----> Destroying <default-amazon-linux-2>...
+I, [2025-11-04T10:34:42.078986 #6335]  INFO -- Kitchen: -----> Destroying <default-windows-2019>...
+I, [2025-11-04T10:34:42.079785 #6335]  INFO -- Kitchen: -----> Destroying <enterprise-ubuntu-2004>...
+I, [2025-11-04T10:34:42.080712 #6335]  INFO -- Kitchen: -----> Destroying <enterprise-centos-8>...
+I, [2025-11-04T10:34:42.081807 #6335]  INFO -- Kitchen: -----> Destroying <enterprise-amazon-linux-2>...
+I, [2025-11-04T10:34:42.082739 #6335]  INFO -- Kitchen: -----> Destroying <windows-test-windows-2019>...
+I, [2025-11-04T10:34:42.083773 #6335]  INFO -- Kitchen: -----> Destroying <supermarket-ubuntu-2004>...
+I, [2025-11-04T10:34:42.084508 #6335]  INFO -- Kitchen: -----> Destroying <supermarket-centos-8>...
+I, [2025-11-04T10:34:42.085622 #6335]  INFO -- Kitchen: -----> Destroying <supermarket-amazon-linux-2>...
+I, [2025-11-04T10:34:42.086271 #6335]  INFO -- Kitchen: -----> Destroying <supermarket-windows-2019>...
+I, [2025-11-04T10:34:42.086857 #6335]  INFO -- Kitchen: -----> Test Kitchen is finished. (0m4.58s)

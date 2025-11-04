@@ -6,7 +6,7 @@ set -e
 echo "🚀 Setting up AWS infrastructure for Chef cookbook testing..."
 
 # Variables - Update these for your environment
-AWS_REGION="us-west-2"
+AWS_REGION="us-east-1"
 VPC_CIDR="10.0.0.0/16"
 SUBNET_CIDR="10.0.1.0/24"
 KEY_NAME="chef-testing"
