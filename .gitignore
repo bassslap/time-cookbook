@@ -1,0 +1,62 @@
+# Chef and Test Kitchen files
+.kitchen/
+.kitchen.local.yml
+kitchen.yml.local
+Policyfile.lock.json
+.chef/
+chefignore
+
+# Log files
+*.log
+logs/
+.kitchen/logs/
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Vagrant
+.vagrant/
+*.box
+
+# Berksfile
+Berksfile.lock
+.berkshelf/
+
+# Test coverage
+coverage/
+
+# Ruby
+.bundle/
+vendor/bundle/
+.rvm/
+
+# Node modules (if any)
+node_modules/
+
+# Test artifacts
+test_platforms.sh
+validate_cookbook.rb
+
+# Documentation artifacts
+DELIVERY_SUMMARY.md
+KITCHEN_CONFIGS.md
+SUPERMARKET_INTEGRATION.md

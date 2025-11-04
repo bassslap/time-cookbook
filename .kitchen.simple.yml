@@ -1,0 +1,70 @@
+---
+driver:
+  name: ec2
+  aws_ssh_key_id: chef-testing
+  region: us-east-1
+  availability_zone: us-east-1a
+  require_chef_omnibus: true
+  instance_type: t3.small
+  associate_public_ip: true
+  interface: dns
+
+transport:
+  name: ssh
+  ssh_key: ~/.ssh/chef-testing.pem
+  username: ec2-user
+
+provisioner:
+  name: chef_zero
+  product_name: chef
+  install_strategy: always
+  chef_license: accept-silent
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: amazon-linux-2
+    driver:
+      image_id: ami-06b21ccaeff8cd686
+    transport:
+      username: ec2-user
+  - name: ubuntu-20-04
+    driver:
+      image_id: ami-0e472ba40eb589f49
+    transport:
+      username: ubuntu
+  - name: windows-2019
+    driver:
+      image_id: ami-0d8940f0876d45867
+      instance_type: t3.medium
+    transport:
+      name: winrm
+      username: administrator
+      elevated: true
+
+suites:
+  - name: default
+    run_list:
+      - recipe[enterprise-time::default]
+    attributes:
+      time:
+        timezone: "UTC"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+        windows:
+          w32time_config:
+            NtpServer: "time.windows.com,0x1 time.nist.gov,0x1"
+            Type: "NTP"
+            Enabled: 1
+  - name: supermarket
+    run_list:
+      - recipe[enterprise-time::default]
+    attributes:
+      time:
+        timezone: "America/New_York"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+          - "2.pool.ntp.org"

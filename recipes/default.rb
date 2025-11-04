@@ -1,17 +1,18 @@
 #
-# Cookbook:: time-cookbook
+# Cookbook:: enterprise-time
 # Recipe:: default
 #
-# Copyright:: 2025, Your Name, All Rights Reserved.
+# Copyright:: 2025, Your Organization, All Rights Reserved.
 #
-# Main recipe that configures timezone and NTP for both Windows and Linux
+# Simple time management using proven Supermarket cookbooks
 
-Chef::Log.info("Configuring time settings for #{node['platform']} (#{node['platform_family']})")
+# STEP 1: Configure NTP services FIRST for accurate time synchronization
+if platform_family?('windows')
+  include_recipe 'enterprise-time::ntp_windows_enhanced'
+else
+  include_recipe 'ntp::default'
+  include_recipe 'enterprise-time::ntp_enhancements'
+end
 
-# Set timezone
-include_recipe 'time-cookbook::timezone'
-
-# Configure NTP
-include_recipe 'time-cookbook::ntp'
-
-Chef::Log.info('Time configuration completed successfully')
+# STEP 2: Configure timezone AFTER NTP is running
+include_recipe 'timezone::default'

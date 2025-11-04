@@ -1,16 +1,33 @@
-# Policyfile for time-cookbook
-# This file can be used to deploy the cookbook via Chef Automate
+# Production Policyfile for enterprise-time cookbook
+# Enterprise time management policy leveraging proven Supermarket cookbooks
+#
+# Deploy with: chef install && chef push production
 
-name 'time_policy'
+name 'enterprise_time_policy'
 
-# The run_list to apply to nodes using this policy
-run_list 'time-cookbook::default'
+# Default run list for time management across all platforms
+run_list 'enterprise-time::default'
 
-# Cookbook:: source - when uploaded to Chef Automate, this will be managed there
-cookbook 'time-cookbook', path: '.'
+# Local cookbook with Supermarket integration
+cookbook 'enterprise-time', path: '.'
 
-# Default attributes that can be overridden in Chef Automate
-default['time']['timezone'] = 'UTC'
+# Production dependencies - proven Supermarket cookbooks
+cookbook 'ntp', '~> 3.7.0' # 500k+ downloads, industry standard
+cookbook 'timezone', '~> 0.2.0'      # Dedicated timezone management
+cookbook 'windows', '~> 9.1.0'       # Advanced Windows resources
+
+# Production-ready default attributes
+# TIMEZONE CONFIGURATION: Customize per environment
+default['time']['timezone'] = 'UTC' # Change to your region
+# Examples:
+# default['time']['timezone'] = 'America/New_York'    # US Eastern
+# default['time']['timezone'] = 'America/Chicago'     # US Central
+# default['time']['timezone'] = 'America/Denver'      # US Mountain
+# default['time']['timezone'] = 'America/Los_Angeles' # US Pacific
+# default['time']['timezone'] = 'Europe/London'       # UK
+# default['time']['timezone'] = 'Europe/Berlin'       # Central Europe
+# default['time']['timezone'] = 'Asia/Tokyo'          # Japan
+# default['time']['timezone'] = 'Australia/Sydney'    # Australia
 default['time']['ntp_servers'] = [
   '0.pool.ntp.org',
   '1.pool.ntp.org',
@@ -18,18 +35,16 @@ default['time']['ntp_servers'] = [
   '3.pool.ntp.org',
 ]
 
-# These can be customized per environment in Chef Automate
+# Enterprise service configuration
 default['time']['ntp_service_enabled'] = true
 
-# Use traditional ntpd by default across all Linux platforms
-default['time']['linux']['use_chrony'] = false
-default['time']['linux']['prefer_ntpd'] = true
+# Platform-specific optimizations for enterprise environments
+default['time']['windows']['w32time_config'] = {
+  'NtpServer' => 'time.windows.com,0x1 time.nist.gov,0x1 0.pool.ntp.org,0x1',
+  'Type' => 'NTP',
+}
 
-# Platform-specific defaults that work well in most environments
-if platform_family?('windows')
-  default['time']['ntp_servers'] = [
-    'time.windows.com',
-    'time.nist.gov',
-    'pool.ntp.org',
-  ]
-end
+# Override for different environments:
+# Development: chef push development
+# Staging: chef push staging
+# Production: chef push production
