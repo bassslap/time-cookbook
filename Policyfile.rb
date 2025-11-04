@@ -1,16 +1,18 @@
-# Standalone testing Policyfile - no external dependencies
+# Enterprise-time cookbook Policyfile - standalone with no external dependencies
 name 'enterprise_time_policy'
 
-# Test our simplified cookbook directly
+# Default run list
 run_list 'enterprise-time::default'
 
-# Only our local cookbook
+# Local cookbook only
 cookbook 'enterprise-time', path: '.'
 
-# Test attributes  
+# Default attributes
 default['time']['timezone'] = 'America/New_York'
 default['time']['ntp_servers'] = [
   '0.pool.ntp.org',
-  '1.pool.ntp.org'
+  '1.pool.ntp.org',
+  '2.pool.ntp.org',
+  '3.pool.ntp.org'
 ]
 default['time']['ntp_service_enabled'] = true
