@@ -16,85 +16,53 @@ driver:
     CreatedBy: 'test-kitchen'
 
 provisioner:
-  name: chef_zero
-  product_name: chef
+  name: chef_infra
   install_strategy: always
+  policyfile: Policyfile.rb
   chef_license: accept-silent
 
 verifier:
   name: inspec
 
 platforms:
-  - name: ubuntu-20.04
+  # Modern Linux Platforms
+  - name: ubuntu-22.04
     driver:
-      image_id: ami-0fb0b230890ccd1e6  # Ubuntu 20.04 LTS us-east-1
-      transport:
-        username: ubuntu
-        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
+      image_id: ami-0c02fb55956c7d316  # Ubuntu 22.04 LTS us-east-1
+    transport:
+      name: ssh
+      username: ubuntu
+      ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
   
-  - name: centos-8
+  - name: amazon-linux-2023
     driver:
-      image_id: ami-0b17d05c24d03b9c8  # CentOS 8 us-east-1
-      transport:
-        username: centos
-        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
-  
-  - name: amazon-linux-2
+      image_id: ami-0a3c3a20c09d6f377  # Amazon Linux 2023 us-east-1
+    transport:
+      name: ssh  
+      username: ec2-user
+      ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
+
+  # Modern Windows Platforms  
+  - name: windows-2022
     driver:
-      image_id: ami-0601422bf6afa8ac3  # Amazon Linux 2 us-east-1 (latest)
-      transport:
-        username: ec2-user
-        ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
-        
+      image_id: ami-043cc489b5239c3de  # Windows Server 2022 Base 2025.10.15
+      instance_type: t3.medium
+    transport:
+      name: winrm
+      username: administrator
+      elevated: true
+
   - name: windows-2019
     driver:
       image_id: ami-0c2d3e23b7708db96  # Windows Server 2019 us-east-1
-      transport:
-        name: winrm
-        username: administrator
-        password: <%= ENV['AWS_WINDOWS_PASSWORD'] %>
+      instance_type: t3.medium
+    transport:
+      name: winrm
+      username: administrator
+      elevated: true
 
 suites:
   - name: default
-    run_list:
-      - recipe[enterprise-time::default]
-    attributes:
-      time:
-        timezone: "America/Los_Angeles"
-        ntp_servers:
-          - "0.pool.ntp.org"
-          - "1.pool.ntp.org"
-          - "2.pool.ntp.org"
-  
-  - name: enterprise
-    run_list:
-      - recipe[enterprise-time::default]
-    includes:
-      - ubuntu-20.04
-      - centos-8
-      - amazon-linux-2
-    attributes:
-      time:
-        timezone: "UTC"
-        ntp_servers:
-          - "ntp1.example.com"  # Replace with your corporate NTP
-          - "ntp2.example.com"
-          - "0.pool.ntp.org"    # Fallback
-  
-  - name: windows-test
-    run_list:
-      - recipe[enterprise-time::default]
-    includes:
-      - windows-2019
-    attributes:
-      time:
-        timezone: "Pacific Standard Time"
-        ntp_servers:
-          - "time.windows.com"
-          - "time.nist.gov"
-          - "pool.ntp.org"
-  
-  - name: supermarket
     run_list:
       - recipe[enterprise-time::default]
     attributes:
@@ -104,3 +72,32 @@ suites:
           - "0.pool.ntp.org"
           - "1.pool.ntp.org"
           - "2.pool.ntp.org"
+          - "3.pool.ntp.org"
+  
+  - name: enterprise-linux
+    run_list:
+      - recipe[enterprise-time::default]
+    includes:
+      - ubuntu-22.04
+      - amazon-linux-2023
+    attributes:
+      time:
+        timezone: "UTC"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+  
+  - name: enterprise-windows
+    run_list:
+      - recipe[enterprise-time::default]
+    includes:
+      - windows-2022
+      - windows-2019
+    attributes:
+      time:
+        timezone: "Eastern Standard Time"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+          - "2.pool.ntp.org"
+          - "3.pool.ntp.org"

@@ -1,3 +1,0 @@
-I, [2025-11-05T14:58:49.405941 #61405]  INFO -- Kitchen: -----> Starting Test Kitchen (v3.9.0)
-I, [2025-11-05T14:58:51.648153 #61405]  INFO -- Kitchen: -----> Destroying <default-windows-2022>...
-I, [2025-11-05T14:59:20.170080 #61405]  INFO -- Kitchen: -----> Test Kitchen is finished. (0m30.76s)
