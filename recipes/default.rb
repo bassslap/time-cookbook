@@ -42,35 +42,38 @@ if platform_family?('windows')
   Chef::Log.info("✅ Configured W32Time with NTP servers: #{node['time']['ntp_servers'].join(', ')}")
   
   # Configure Windows timezone using native tzutil command
-  timezone_to_set = node['time']['timezone']
+  # NOTE: Temporarily commenting out timezone setting to debug NTP configuration
+  # timezone_to_set = node['time']['timezone']
   
-  # Convert common timezone names to Windows format
-  windows_timezone = case timezone_to_set
-  when 'UTC'
-    'UTC'
-  when 'America/New_York'
-    'Eastern Standard Time'
-  when 'America/Chicago'
-    'Central Standard Time'
-  when 'America/Denver'
-    'Mountain Standard Time'
-  when 'America/Los_Angeles'
-    'Pacific Standard Time'
-  else
-    timezone_to_set
-  end
+  # # Convert common timezone names to Windows format
+  # windows_timezone = case timezone_to_set
+  # when 'UTC'
+  #   'UTC'
+  # when 'America/New_York', 'Eastern Standard Time'
+  #   'Eastern Standard Time'
+  # when 'America/Chicago', 'Central Standard Time'
+  #   'Central Standard Time'
+  # when 'America/Denver', 'Mountain Standard Time'
+  #   'Mountain Standard Time'
+  # when 'America/Los_Angeles', 'Pacific Standard Time'
+  #   'Pacific Standard Time'
+  # else
+  #   timezone_to_set
+  # end
   
-  # Set Windows timezone using tzutil
-  execute 'set_windows_timezone' do
-    command "tzutil /s \"#{windows_timezone}\""
-    action :run
-    not_if "tzutil /g | findstr /i \"#{windows_timezone}\""
-  end
+  # # Set Windows timezone using tzutil
+  # execute 'set_windows_timezone' do
+  #   command "tzutil /s \"#{windows_timezone}\""
+  #   action :run
+  #   not_if "tzutil /g | findstr /i \"#{windows_timezone}\""
+  # end
   
-  Chef::Log.info("✅ Configured Windows timezone: #{windows_timezone}")
+  # Chef::Log.info("✅ Configured Windows timezone: #{windows_timezone}")
+  
+  Chef::Log.info("⚠️ Timezone configuration temporarily disabled for debugging")
   
   log 'windows_time_config' do
-    message "✅ Native W32Time configuration completed - NTP: #{node['time']['ntp_servers'].join(', ')}, Timezone: #{windows_timezone}"
+    message "✅ Native W32Time configuration completed - NTP: #{node['time']['ntp_servers'].join(', ')}"
     level :info
   end
   

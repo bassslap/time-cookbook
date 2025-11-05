@@ -32,7 +32,7 @@ suites:
       - recipe[enterprise-time::default]
     attributes:
       time:
-        timezone: America/New_York
+        timezone: Eastern Standard Time
         ntp_servers:
           - 0.pool.ntp.org
           - 1.pool.ntp.org
