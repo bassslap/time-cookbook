@@ -9,7 +9,7 @@ chefignore
 # Log files
 *.log
 logs/
-.kitchen/logs/
+.kitchen/logs/*.log
 
 # Temporary files
 *.tmp
