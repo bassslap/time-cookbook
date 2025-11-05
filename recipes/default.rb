@@ -41,39 +41,112 @@ if platform_family?('windows')
   
   Chef::Log.info("✅ Configured W32Time with NTP servers: #{node['time']['ntp_servers'].join(', ')}")
   
-  # Configure Windows timezone using native tzutil command
-  # NOTE: Temporarily commenting out timezone setting to debug NTP configuration
-  # timezone_to_set = node['time']['timezone']
+  # STEP 1: Configure critical W32Time registry settings
+  registry_key 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\Parameters' do
+    values [
+      { name: 'NoModifySystemTime', type: :dword, data: 0 }
+    ]
+    action :create
+    notifies :restart, 'windows_service[w32time]', :delayed
+  end
   
-  # # Convert common timezone names to Windows format
-  # windows_timezone = case timezone_to_set
-  # when 'UTC'
-  #   'UTC'
-  # when 'America/New_York', 'Eastern Standard Time'
-  #   'Eastern Standard Time'
-  # when 'America/Chicago', 'Central Standard Time'
-  #   'Central Standard Time'
-  # when 'America/Denver', 'Mountain Standard Time'
-  #   'Mountain Standard Time'
-  # when 'America/Los_Angeles', 'Pacific Standard Time'
-  #   'Pacific Standard Time'
-  # else
-  #   timezone_to_set
-  # end
+  Chef::Log.info("✅ Set NoModifySystemTime registry value to 0")
   
-  # # Set Windows timezone using tzutil
-  # execute 'set_windows_timezone' do
-  #   command "tzutil /s \"#{windows_timezone}\""
-  #   action :run
-  #   not_if "tzutil /g | findstr /i \"#{windows_timezone}\""
-  # end
+  # STEP 2: Configure W32Time for better synchronization accuracy
+  registry_key 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\Config' do
+    values [
+      { name: 'MaxPosPhaseCorrection', type: :dword, data: 172800 },
+      { name: 'MaxNegPhaseCorrection', type: :dword, data: 172800 },
+      { name: 'AnnounceFlags', type: :dword, data: 5 },
+      { name: 'MinPollInterval', type: :dword, data: 6 },
+      { name: 'MaxPollInterval', type: :dword, data: 10 }
+    ]
+    action :create
+    notifies :restart, 'windows_service[w32time]', :delayed
+  end
   
-  # Chef::Log.info("✅ Configured Windows timezone: #{windows_timezone}")
+  Chef::Log.info("✅ Configured W32Time advanced settings for better accuracy")
   
-  Chef::Log.info("⚠️ Timezone configuration temporarily disabled for debugging")
+  # STEP 3: Configure Windows timezone using PowerShell (more reliable than tzutil)
+  timezone_to_set = node['time']['timezone']
+  
+  # First, get list of available timezones and map common names to Windows format
+  windows_timezone = case timezone_to_set
+  when 'UTC'
+    'UTC'
+  when 'America/New_York', 'Eastern Standard Time'
+    'Eastern Standard Time'
+  when 'America/Chicago', 'Central Standard Time'
+    'Central Standard Time'  
+  when 'America/Denver', 'Mountain Standard Time'
+    'Mountain Standard Time'
+  when 'America/Los_Angeles', 'Pacific Standard Time'
+    'Pacific Standard Time'
+  when 'America/Phoenix'
+    'US Mountain Standard Time'
+  when 'Europe/London'
+    'GMT Standard Time'
+  when 'Europe/Paris', 'Europe/Berlin'
+    'W. Europe Standard Time'
+  when 'Asia/Tokyo'
+    'Tokyo Standard Time'
+  when 'Australia/Sydney'
+    'AUS Eastern Standard Time'
+  else
+    timezone_to_set
+  end
+  
+  # Use PowerShell to set timezone (more reliable than tzutil)
+  powershell_script 'set_windows_timezone' do
+    code <<-EOH
+      Write-Host "Current timezone: $((Get-TimeZone).Id)"
+      Write-Host "Target timezone: #{windows_timezone}"
+      
+      try {
+        $currentTZ = Get-TimeZone
+        Write-Host "Current timezone ID: $($currentTZ.Id)"
+        
+        if ($currentTZ.Id -ne "#{windows_timezone}") {
+          Write-Host "Setting timezone to #{windows_timezone}..."
+          Set-TimeZone -Id "#{windows_timezone}" -ErrorAction Stop
+          $newTZ = Get-TimeZone
+          Write-Host "Successfully set timezone to $($newTZ.Id)"
+        } else {
+          Write-Host "Timezone already set to #{windows_timezone}"
+        }
+      } catch {
+        Write-Host "Error setting timezone: $_"
+        Write-Host "Attempting to list available timezones..."
+        $availableZones = Get-TimeZone -ListAvailable | Where-Object { $_.Id -like "*Eastern*" -or $_.DisplayName -like "*Eastern*" }
+        Write-Host "Available Eastern timezones:"
+        $availableZones | ForEach-Object { Write-Host "  ID: $($_.Id), Display: $($_.DisplayName)" }
+        throw "Failed to set timezone to #{windows_timezone}"
+      }
+    EOH
+    action :run
+    # Remove the not_if to force execution and better debugging
+  end
+  
+  Chef::Log.info("✅ Configured Windows timezone: #{windows_timezone}")
+  
+  # STEP 4: Verify W32Time service is running and configured properly
+  execute 'verify_w32time_status' do
+    command 'w32tm /query /status'
+    action :run
+  end
+  
+  # STEP 5: Final time synchronization and verification
+  execute 'final_time_sync' do
+    command 'w32tm /resync /force'
+    action :run
+    retries 3
+    retry_delay 5
+  end
+  
+  Chef::Log.info("✅ Completed comprehensive Windows time configuration")
   
   log 'windows_time_config' do
-    message "✅ Native W32Time configuration completed - NTP: #{node['time']['ntp_servers'].join(', ')}"
+    message "✅ Enhanced W32Time configuration completed - NTP: #{node['time']['ntp_servers'].join(', ')}, Timezone: #{windows_timezone}, Registry: Configured"
     level :info
   end
   

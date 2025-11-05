@@ -10,12 +10,50 @@ describe 'Time and NTP configuration' do
       it { should be_running }
     end
 
+    # Test W32Time status and functionality
     describe powershell('w32tm /query /status') do
       its('exit_status') { should eq 0 }
+      its('stdout') { should_not be_empty }
     end
 
+    # Test timezone configuration
     describe powershell('Get-TimeZone | Select-Object -ExpandProperty Id') do
       its('stdout.strip') { should_not be_empty }
+    end
+
+    # Test that timezone is set to Eastern Standard Time (EST)
+    describe powershell('Get-TimeZone | Select-Object -ExpandProperty Id') do
+      its('stdout.strip') { should eq 'Eastern Standard Time' }
+    end
+
+    # Test critical registry settings
+    describe registry_key('HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\Parameters') do
+      it { should exist }
+      it { should have_property('NoModifySystemTime') }
+      its('NoModifySystemTime') { should eq 0 }
+    end
+
+    # Test W32Time configuration registry settings
+    describe registry_key('HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\Config') do
+      it { should exist }
+      it { should have_property('MaxPosPhaseCorrection') }
+      it { should have_property('MaxNegPhaseCorrection') }
+      it { should have_property('AnnounceFlags') }
+      its('MaxPosPhaseCorrection') { should eq 172800 }
+      its('MaxNegPhaseCorrection') { should eq 172800 }
+      its('AnnounceFlags') { should eq 5 }
+    end
+
+    # Test NTP server configuration
+    describe powershell('w32tm /query /configuration') do
+      its('exit_status') { should eq 0 }
+      its('stdout') { should match(/pool\.ntp\.org/) }
+    end
+
+    # Test time synchronization capability
+    describe powershell('w32tm /query /peers') do
+      its('exit_status') { should eq 0 }
+      its('stdout') { should_not be_empty }
     end
   end
 
