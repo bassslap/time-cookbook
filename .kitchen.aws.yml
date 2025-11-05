@@ -1,12 +1,10 @@
 ---
 driver:
   name: ec2
-  aws_ssh_key_id: <%= ENV['AWS_SSH_KEY_NAME'] || 'chef-testing' %>
-  region: <%= ENV['AWS_REGION'] || 'us-east-1' %>
-  availability_zone: <%= ENV['AWS_REGION'] || 'us-east-1' %>a
+  aws_ssh_key_id: chef-testing
+  region: us-east-1
+  availability_zone: us-east-1a
   require_chef_omnibus: true
-  subnet_id: <%= ENV['AWS_SUBNET_ID'] %>
-  security_group_ids: <%= ENV['AWS_SECURITY_GROUP_ID'] %>
   instance_type: t3.small
   associate_public_ip: true
   interface: dns
@@ -45,7 +43,7 @@ platforms:
   # Modern Windows Platforms  
   - name: windows-2022
     driver:
-      image_id: ami-0e16d075ec2375cf5  # Windows Server 2022 Base 2025.09.10 (more stable)
+      image_id: ami-043cc489b5239c3de  # Windows Server 2022 Base 2025.10.15 (latest)
       instance_type: t3.medium
     transport:
       name: winrm
