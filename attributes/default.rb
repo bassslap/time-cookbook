@@ -7,7 +7,8 @@
 # Production-ready time management attributes with intelligent platform defaults
 
 # Core time configuration
-default['time']['timezone'] = 'UTC'
+# timezone can be overridden in Kitchen suites, roles, or Policyfile
+default['time']['timezone'] = 'America/New_York' # EST/EDT default
 default['time']['ntp_service_enabled'] = true
 
 # Intelligent NTP server selection based on platform and region

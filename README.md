@@ -101,6 +101,90 @@ default['time']['ntp_servers'] = [
 ]
 ```
 
+## Timezone Configuration Deep Dive
+
+### Smart Timezone Management
+
+The cookbook uses intelligent timezone detection and idempotent configuration:
+
+```ruby
+# Linux timezone logic (lines 247-249 in recipes/default.rb)
+execute 'set_timezone' do
+  command "timedatectl set-timezone #{timezone_to_set}"
+  action :run
+  not_if "timedatectl show --property=Timezone --value | grep -q '^#{timezone_to_set}$'"
+end
+```
+
+**How the `not_if` Guard Works:**
+1. **Check Current**: `timedatectl show --property=Timezone --value` returns current timezone
+2. **Compare**: `grep -q` checks if it exactly matches desired timezone
+3. **Decision Logic**:
+   - ✅ **Match found** → Skip timezone change (already correct)
+   - 🔄 **No match** → Set timezone to desired value
+4. **Result**: Idempotent - only changes when necessary
+
+### EST/EDT Configuration Examples
+
+#### Option 1: Edit Policyfile.rb (Recommended)
+```ruby
+# /path/to/cookbook/Policyfile.rb
+default['time']['timezone'] = 'America/New_York'  # EST/EDT
+
+# Then update and deploy:
+# chef update && chef push production
+```
+
+#### Option 2: Node/Role Attributes
+```ruby
+# In a role or node definition
+default_attributes(
+  'time' => {
+    'timezone' => 'America/New_York',
+    'ntp_servers' => [
+      '0.north-america.pool.ntp.org',
+      '1.north-america.pool.ntp.org'
+    ]
+  }
+)
+```
+
+#### Option 3: Kitchen Testing Override
+```yaml
+# .kitchen.yml
+suites:
+  - name: est-testing
+    attributes:
+      time:
+        timezone: "America/New_York"
+```
+
+### Common Timezone Values
+
+| Region | IANA Format (Linux) | Windows Format | Notes |
+|--------|-------------------|----------------|-------|
+| **Eastern** | `America/New_York` | `Eastern Standard Time` | EST/EDT |
+| **Central** | `America/Chicago` | `Central Standard Time` | CST/CDT |
+| **Mountain** | `America/Denver` | `Mountain Standard Time` | MST/MDT |
+| **Pacific** | `America/Los_Angeles` | `Pacific Standard Time` | PST/PDT |
+| **UTC** | `UTC` | `UTC` | Universal |
+| **London** | `Europe/London` | `GMT Standard Time` | GMT/BST |
+
+### Timezone Validation
+
+The cookbook automatically maps between IANA and Windows formats:
+
+```ruby
+# Cross-platform timezone mapping in recipes/default.rb
+windows_timezone = case timezone_to_set
+when 'America/New_York', 'Eastern Standard Time'
+  'Eastern Standard Time'  # Windows format
+when 'UTC'
+  'UTC'                    # Same on both platforms
+# ... more mappings
+end
+```
+
 ## Deployment Methods
 
 ### Chef Automate/Server

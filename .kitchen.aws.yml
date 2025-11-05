@@ -45,7 +45,7 @@ platforms:
   # Modern Windows Platforms  
   - name: windows-2022
     driver:
-      image_id: ami-043cc489b5239c3de  # Windows Server 2022 Base 2025.10.15
+      image_id: ami-0e16d075ec2375cf5  # Windows Server 2022 Base 2025.09.10 (more stable)
       instance_type: t3.medium
     transport:
       name: winrm
@@ -82,7 +82,7 @@ suites:
       - amazon-linux-2023
     attributes:
       time:
-        timezone: "UTC"
+        timezone: "America/New_York"  # EST/EDT
         ntp_servers:
           - "0.pool.ntp.org"
           - "1.pool.ntp.org"

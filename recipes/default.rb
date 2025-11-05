@@ -164,6 +164,18 @@ else
         action :install
       end
 
+      # Configure chrony with NTP servers
+      template '/etc/chrony.conf' do
+        source 'chrony.conf.erb'
+        owner 'root'
+        group 'root'
+        mode '0644'
+        variables(
+          ntp_servers: node['time']['ntp_servers']
+        )
+        notifies :restart, 'service[chronyd]', :delayed
+      end
+
       service 'chronyd' do
         action [:enable, :start]
       end
@@ -188,6 +200,18 @@ else
 
       package 'chrony' do
         action :install
+      end
+
+      # Configure chrony with NTP servers
+      template '/etc/chrony.conf' do
+        source 'chrony.conf.erb'
+        owner 'root'
+        group 'root'
+        mode '0644'
+        variables(
+          ntp_servers: node['time']['ntp_servers']
+        )
+        notifies :restart, 'service[chronyd]', :delayed
       end
 
       service 'chronyd' do
@@ -216,8 +240,23 @@ end
 
 # STEP 2: Linux timezone configuration (Windows handled above)
 if platform_family?('rhel', 'debian', 'amazon')
-  timezone_to_set = node['time']['timezone']
+
+  # SOLUTION: Bypass automatic attribute precedence by reading from multiple sources
+  # Priority: 1) Kitchen attributes, 2) Policyfile attributes, 3) Cookbook defaults
+  desired_timezone = node['time']['timezone']
+
+  # On AWS, automatic attributes set timezone to UTC, but we want to honor explicit settings
+  # Check if we have an explicit timezone setting (not the automatic UTC)
+  if desired_timezone == 'UTC' && (node.override['time']['timezone'] || node.default['time']['timezone'])
+    # Use the explicitly configured timezone instead of automatic UTC
+    timezone_to_set = node.override['time']['timezone'] || node.default['time']['timezone']
+    Chef::Log.info("🔧 Overriding automatic UTC timezone with configured: #{timezone_to_set}")
+  else
+    timezone_to_set = desired_timezone
+  end
+
   Chef::Log.info("Setting Linux timezone to: #{timezone_to_set}")
+  Chef::Log.info("🔍 DEBUG: desired=#{desired_timezone.inspect}, override=#{node.override['time']['timezone'].inspect}, default=#{node.default['time']['timezone'].inspect}")
 
   execute 'set_timezone' do
     command "timedatectl set-timezone #{timezone_to_set}"
