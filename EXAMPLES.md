@@ -10,7 +10,9 @@ run_list "recipe[time-cookbook::default]"
 ## Bootstrap from Chef workstaion
 
 '''
-knife bootstrap 10.10.3.7 -N node-win-01 -U ubuntu -P 'yourpassword!' --connection-protocol winrm -r 'recipe[enterprise-time]'
+knife bootstrap 10.10.3.7 -N node-win-01 -U ubuntu -P 'yourpassword!' --connection-protocol winrm -r 'recip[enterprise-time]'
+
+knife bootstrap 10.10.3.4 -N node-linux-04 -U ubuntu --sudo -i ~/.ssh/sys_admin.pem -r "recip[enterprise-time]"
 '''
 
 ## Custom timezone and NTP servers
