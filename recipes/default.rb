@@ -247,9 +247,12 @@ if platform_family?('rhel', 'debian', 'amazon')
 
   # On AWS, automatic attributes set timezone to UTC, but we want to honor explicit settings
   # Check if we have an explicit timezone setting (not the automatic UTC)
-  if desired_timezone == 'UTC' && (node.override['time']['timezone'] || node.default['time']['timezone'])
+  override_tz = node.override['time'] && node.override['time']['timezone'] && !node.override['time']['timezone'].empty? ? node.override['time']['timezone'] : nil
+  default_tz = node.default['time'] && node.default['time']['timezone'] && !node.default['time']['timezone'].empty? ? node.default['time']['timezone'] : nil
+  
+  if desired_timezone == 'UTC' && (override_tz || default_tz)
     # Use the explicitly configured timezone instead of automatic UTC
-    timezone_to_set = node.override['time']['timezone'] || node.default['time']['timezone']
+    timezone_to_set = override_tz || default_tz
     Chef::Log.info("🔧 Overriding automatic UTC timezone with configured: #{timezone_to_set}")
   else
     timezone_to_set = desired_timezone
