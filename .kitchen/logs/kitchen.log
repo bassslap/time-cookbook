@@ -1,77 +1,77 @@
-I, [2025-11-05T21:34:40.929635 #77893]  INFO -- Kitchen: -----> Starting Test Kitchen (v3.9.0)
-I, [2025-11-05T21:34:43.360744 #77893]  INFO -- Kitchen: -----> Creating <default-windows-2022>...
-E, [2025-11-05T21:36:23.921891 #77893] ERROR -- Kitchen: ------Exception-------
-E, [2025-11-05T21:36:23.921991 #77893] ERROR -- Kitchen: Class: Kitchen::ActionFailed
-E, [2025-11-05T21:36:23.922042 #77893] ERROR -- Kitchen: Message: 1 actions failed.
+I, [2025-11-06T02:59:19.531924 #84101]  INFO -- Kitchen: -----> Starting Test Kitchen (v3.9.0)
+I, [2025-11-06T02:59:22.034323 #84101]  INFO -- Kitchen: -----> Creating <default-windows-2022>...
+E, [2025-11-06T03:01:05.170783 #84101] ERROR -- Kitchen: ------Exception-------
+E, [2025-11-06T03:01:05.170904 #84101] ERROR -- Kitchen: Class: Kitchen::ActionFailed
+E, [2025-11-06T03:01:05.170973 #84101] ERROR -- Kitchen: Message: 1 actions failed.
 >>>>>>     Failed to complete #create action: [no implicit conversion of nil into String in the specified region us-east-1. Please check this AMI is available in this region.] on default-windows-2022
-E, [2025-11-05T21:36:23.922139 #77893] ERROR -- Kitchen: ----------------------
-E, [2025-11-05T21:36:23.922201 #77893] ERROR -- Kitchen: ------Backtrace-------
-E, [2025-11-05T21:36:23.922246 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:181:in `report_errors'
-E, [2025-11-05T21:36:23.922299 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:172:in `run_action'
-E, [2025-11-05T21:36:23.922345 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command/action.rb:35:in `block in call'
-E, [2025-11-05T21:36:23.922398 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/3.1.0/benchmark.rb:296:in `measure'
-E, [2025-11-05T21:36:23.922445 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command/action.rb:33:in `call'
-E, [2025-11-05T21:36:23.922508 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/cli.rb:52:in `perform'
-E, [2025-11-05T21:36:23.922581 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/cli.rb:198:in `block (2 levels) in <class:CLI>'
-E, [2025-11-05T21:36:23.922636 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.4.0/lib/thor/command.rb:28:in `run'
-E, [2025-11-05T21:36:23.922697 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.4.0/lib/thor/invocation.rb:127:in `invoke_command'
-E, [2025-11-05T21:36:23.922744 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.4.0/lib/thor.rb:538:in `dispatch'
-E, [2025-11-05T21:36:23.922805 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.4.0/lib/thor/base.rb:584:in `start'
-E, [2025-11-05T21:36:23.922855 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/bin/kitchen:11:in `block in <top (required)>'
-E, [2025-11-05T21:36:23.922918 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/errors.rb:183:in `with_friendly_errors'
-E, [2025-11-05T21:36:23.922974 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/bin/kitchen:11:in `<top (required)>'
-E, [2025-11-05T21:36:23.923023 #77893] ERROR -- Kitchen: /usr/bin/kitchen:455:in `load'
-E, [2025-11-05T21:36:23.923068 #77893] ERROR -- Kitchen: /usr/bin/kitchen:455:in `<main>'
-E, [2025-11-05T21:36:23.923113 #77893] ERROR -- Kitchen: ----End Backtrace-----
-E, [2025-11-05T21:36:23.923158 #77893] ERROR -- Kitchen: -Composite Exception--
-E, [2025-11-05T21:36:23.923205 #77893] ERROR -- Kitchen: Class: Kitchen::ActionFailed
-E, [2025-11-05T21:36:23.923264 #77893] ERROR -- Kitchen: Message: Failed to complete #create action: [no implicit conversion of nil into String in the specified region us-east-1. Please check this AMI is available in this region.] on default-windows-2022
-E, [2025-11-05T21:36:23.923323 #77893] ERROR -- Kitchen: ----------------------
-E, [2025-11-05T21:36:23.923369 #77893] ERROR -- Kitchen: ------Backtrace-------
-E, [2025-11-05T21:36:23.923414 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/kitchen-ec2-3.20.0/lib/kitchen/driver/ec2.rb:282:in `rescue in create'
-E, [2025-11-05T21:36:23.923474 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/kitchen-ec2-3.20.0/lib/kitchen/driver/ec2.rb:205:in `create'
-E, [2025-11-05T21:36:23.923534 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `public_send'
-E, [2025-11-05T21:36:23.923611 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `block in perform_action'
-E, [2025-11-05T21:36:23.923660 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:563:in `synchronize_or_call'
-E, [2025-11-05T21:36:23.923727 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:524:in `block in action'
-E, [2025-11-05T21:36:23.923776 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/3.1.0/benchmark.rb:296:in `measure'
-E, [2025-11-05T21:36:23.923825 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:523:in `action'
-E, [2025-11-05T21:36:23.923873 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `perform_action'
-E, [2025-11-05T21:36:23.923921 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:404:in `create_action'
-E, [2025-11-05T21:36:23.923982 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:392:in `block (2 levels) in transition_to'
-E, [2025-11-05T21:36:23.924043 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/lifecycle_hooks.rb:47:in `run_with_hooks'
-E, [2025-11-05T21:36:23.924101 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:391:in `block in transition_to'
-E, [2025-11-05T21:36:23.924159 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:390:in `each'
-E, [2025-11-05T21:36:23.924206 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:390:in `transition_to'
-E, [2025-11-05T21:36:23.924252 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:128:in `create'
-E, [2025-11-05T21:36:23.924298 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:195:in `public_send'
-E, [2025-11-05T21:36:23.924344 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:195:in `run_action_in_thread'
-E, [2025-11-05T21:36:23.924412 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:166:in `block (2 levels) in run_action'
-E, [2025-11-05T21:36:23.924461 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/logging-2.4.0/lib/logging/diagnostic_context.rb:474:in `block in create_with_logging_context'
-E, [2025-11-05T21:36:23.924510 #77893] ERROR -- Kitchen: ----End Backtrace-----
-E, [2025-11-05T21:36:23.924620 #77893] ERROR -- Kitchen: ---Nested Exception---
-E, [2025-11-05T21:36:23.924696 #77893] ERROR -- Kitchen: Class: Kitchen::ActionFailed
-E, [2025-11-05T21:36:23.924747 #77893] ERROR -- Kitchen: Message: Failed to complete #create action: [no implicit conversion of nil into String in the specified region us-east-1. Please check this AMI is available in this region.]
-E, [2025-11-05T21:36:23.924796 #77893] ERROR -- Kitchen: ----------------------
-E, [2025-11-05T21:36:23.924842 #77893] ERROR -- Kitchen: ------Backtrace-------
-E, [2025-11-05T21:36:23.924902 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/kitchen-ec2-3.20.0/lib/kitchen/driver/ec2.rb:282:in `rescue in create'
-E, [2025-11-05T21:36:23.925016 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/kitchen-ec2-3.20.0/lib/kitchen/driver/ec2.rb:205:in `create'
-E, [2025-11-05T21:36:23.925079 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `public_send'
-E, [2025-11-05T21:36:23.925141 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `block in perform_action'
-E, [2025-11-05T21:36:23.925204 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:563:in `synchronize_or_call'
-E, [2025-11-05T21:36:23.925248 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:524:in `block in action'
-E, [2025-11-05T21:36:23.925307 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/3.1.0/benchmark.rb:296:in `measure'
-E, [2025-11-05T21:36:23.925355 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:523:in `action'
-E, [2025-11-05T21:36:23.925402 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `perform_action'
-E, [2025-11-05T21:36:23.925449 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:404:in `create_action'
-E, [2025-11-05T21:36:23.925497 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:392:in `block (2 levels) in transition_to'
-E, [2025-11-05T21:36:23.925546 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/lifecycle_hooks.rb:47:in `run_with_hooks'
-E, [2025-11-05T21:36:23.925609 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:391:in `block in transition_to'
-E, [2025-11-05T21:36:23.925658 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:390:in `each'
-E, [2025-11-05T21:36:23.925706 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:390:in `transition_to'
-E, [2025-11-05T21:36:23.925754 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:128:in `create'
-E, [2025-11-05T21:36:23.925801 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:195:in `public_send'
-E, [2025-11-05T21:36:23.925848 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:195:in `run_action_in_thread'
-E, [2025-11-05T21:36:23.925895 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:166:in `block (2 levels) in run_action'
-E, [2025-11-05T21:36:23.925944 #77893] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/logging-2.4.0/lib/logging/diagnostic_context.rb:474:in `block in create_with_logging_context'
-E, [2025-11-05T21:36:23.925991 #77893] ERROR -- Kitchen: ----End Backtrace-----
+E, [2025-11-06T03:01:05.171045 #84101] ERROR -- Kitchen: ----------------------
+E, [2025-11-06T03:01:05.171118 #84101] ERROR -- Kitchen: ------Backtrace-------
+E, [2025-11-06T03:01:05.171174 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:181:in `report_errors'
+E, [2025-11-06T03:01:05.171237 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:172:in `run_action'
+E, [2025-11-06T03:01:05.171300 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command/action.rb:35:in `block in call'
+E, [2025-11-06T03:01:05.171374 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/3.1.0/benchmark.rb:296:in `measure'
+E, [2025-11-06T03:01:05.171437 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command/action.rb:33:in `call'
+E, [2025-11-06T03:01:05.171503 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/cli.rb:52:in `perform'
+E, [2025-11-06T03:01:05.171562 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/cli.rb:198:in `block (2 levels) in <class:CLI>'
+E, [2025-11-06T03:01:05.171613 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.4.0/lib/thor/command.rb:28:in `run'
+E, [2025-11-06T03:01:05.171670 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.4.0/lib/thor/invocation.rb:127:in `invoke_command'
+E, [2025-11-06T03:01:05.171731 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.4.0/lib/thor.rb:538:in `dispatch'
+E, [2025-11-06T03:01:05.171808 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/thor-1.4.0/lib/thor/base.rb:584:in `start'
+E, [2025-11-06T03:01:05.171912 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/bin/kitchen:11:in `block in <top (required)>'
+E, [2025-11-06T03:01:05.172002 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/errors.rb:183:in `with_friendly_errors'
+E, [2025-11-06T03:01:05.172080 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/bin/kitchen:11:in `<top (required)>'
+E, [2025-11-06T03:01:05.172131 #84101] ERROR -- Kitchen: /usr/bin/kitchen:455:in `load'
+E, [2025-11-06T03:01:05.172175 #84101] ERROR -- Kitchen: /usr/bin/kitchen:455:in `<main>'
+E, [2025-11-06T03:01:05.172226 #84101] ERROR -- Kitchen: ----End Backtrace-----
+E, [2025-11-06T03:01:05.172289 #84101] ERROR -- Kitchen: -Composite Exception--
+E, [2025-11-06T03:01:05.172336 #84101] ERROR -- Kitchen: Class: Kitchen::ActionFailed
+E, [2025-11-06T03:01:05.172399 #84101] ERROR -- Kitchen: Message: Failed to complete #create action: [no implicit conversion of nil into String in the specified region us-east-1. Please check this AMI is available in this region.] on default-windows-2022
+E, [2025-11-06T03:01:05.172491 #84101] ERROR -- Kitchen: ----------------------
+E, [2025-11-06T03:01:05.172569 #84101] ERROR -- Kitchen: ------Backtrace-------
+E, [2025-11-06T03:01:05.172620 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/kitchen-ec2-3.20.0/lib/kitchen/driver/ec2.rb:282:in `rescue in create'
+E, [2025-11-06T03:01:05.172692 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/kitchen-ec2-3.20.0/lib/kitchen/driver/ec2.rb:205:in `create'
+E, [2025-11-06T03:01:05.172758 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `public_send'
+E, [2025-11-06T03:01:05.172823 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `block in perform_action'
+E, [2025-11-06T03:01:05.172881 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:563:in `synchronize_or_call'
+E, [2025-11-06T03:01:05.172960 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:524:in `block in action'
+E, [2025-11-06T03:01:05.173024 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/3.1.0/benchmark.rb:296:in `measure'
+E, [2025-11-06T03:01:05.173129 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:523:in `action'
+E, [2025-11-06T03:01:05.173208 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `perform_action'
+E, [2025-11-06T03:01:05.173258 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:404:in `create_action'
+E, [2025-11-06T03:01:05.173335 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:392:in `block (2 levels) in transition_to'
+E, [2025-11-06T03:01:05.173439 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/lifecycle_hooks.rb:47:in `run_with_hooks'
+E, [2025-11-06T03:01:05.173531 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:391:in `block in transition_to'
+E, [2025-11-06T03:01:05.173623 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:390:in `each'
+E, [2025-11-06T03:01:05.173673 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:390:in `transition_to'
+E, [2025-11-06T03:01:05.173764 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:128:in `create'
+E, [2025-11-06T03:01:05.173841 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:195:in `public_send'
+E, [2025-11-06T03:01:05.173891 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:195:in `run_action_in_thread'
+E, [2025-11-06T03:01:05.173956 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:166:in `block (2 levels) in run_action'
+E, [2025-11-06T03:01:05.174013 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/logging-2.4.0/lib/logging/diagnostic_context.rb:474:in `block in create_with_logging_context'
+E, [2025-11-06T03:01:05.174088 #84101] ERROR -- Kitchen: ----End Backtrace-----
+E, [2025-11-06T03:01:05.174169 #84101] ERROR -- Kitchen: ---Nested Exception---
+E, [2025-11-06T03:01:05.174251 #84101] ERROR -- Kitchen: Class: Kitchen::ActionFailed
+E, [2025-11-06T03:01:05.174300 #84101] ERROR -- Kitchen: Message: Failed to complete #create action: [no implicit conversion of nil into String in the specified region us-east-1. Please check this AMI is available in this region.]
+E, [2025-11-06T03:01:05.174403 #84101] ERROR -- Kitchen: ----------------------
+E, [2025-11-06T03:01:05.174486 #84101] ERROR -- Kitchen: ------Backtrace-------
+E, [2025-11-06T03:01:05.174571 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/kitchen-ec2-3.20.0/lib/kitchen/driver/ec2.rb:282:in `rescue in create'
+E, [2025-11-06T03:01:05.174653 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/kitchen-ec2-3.20.0/lib/kitchen/driver/ec2.rb:205:in `create'
+E, [2025-11-06T03:01:05.174722 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `public_send'
+E, [2025-11-06T03:01:05.174825 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `block in perform_action'
+E, [2025-11-06T03:01:05.174913 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:563:in `synchronize_or_call'
+E, [2025-11-06T03:01:05.175013 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:524:in `block in action'
+E, [2025-11-06T03:01:05.175080 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/3.1.0/benchmark.rb:296:in `measure'
+E, [2025-11-06T03:01:05.175137 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:523:in `action'
+E, [2025-11-06T03:01:05.175195 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:495:in `perform_action'
+E, [2025-11-06T03:01:05.175281 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:404:in `create_action'
+E, [2025-11-06T03:01:05.175381 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:392:in `block (2 levels) in transition_to'
+E, [2025-11-06T03:01:05.175494 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/lifecycle_hooks.rb:47:in `run_with_hooks'
+E, [2025-11-06T03:01:05.175625 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:391:in `block in transition_to'
+E, [2025-11-06T03:01:05.175765 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:390:in `each'
+E, [2025-11-06T03:01:05.175892 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:390:in `transition_to'
+E, [2025-11-06T03:01:05.176024 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/instance.rb:128:in `create'
+E, [2025-11-06T03:01:05.176150 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:195:in `public_send'
+E, [2025-11-06T03:01:05.176264 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:195:in `run_action_in_thread'
+E, [2025-11-06T03:01:05.176358 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/test-kitchen-3.9.0/lib/kitchen/command.rb:166:in `block (2 levels) in run_action'
+E, [2025-11-06T03:01:05.176502 #84101] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/3.1.0/gems/logging-2.4.0/lib/logging/diagnostic_context.rb:474:in `block in create_with_logging_context'
+E, [2025-11-06T03:01:05.176597 #84101] ERROR -- Kitchen: ----End Backtrace-----
