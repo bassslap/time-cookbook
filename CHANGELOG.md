@@ -5,6 +5,26 @@ All notable changes to the time-cookbook are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.2] - 2025-11-10
+
+### Fixed
+- **CRITICAL: Windows Automatic Timezone Override**: Fixed timezone stuck at UTC due to Windows automatic attributes
+- **Attribute Precedence Issue**: Resolved conflict where Windows Ohai automatic attributes beat override attributes
+- **Production Deployment**: Fixed 'Coordinated Universal Time' automatic attribute preventing EST timezone setting
+- **Cookbook Logic Enhancement**: Added specific handling for Windows automatic timezone detection
+
+### Root Cause Analysis
+- Windows nodes set automatic attribute `timezone: "Coordinated Universal Time"` via Ohai
+- Automatic attributes have higher precedence than override attributes in Chef
+- Node override attributes were not reaching Chef client (`override: :not_present`)
+- Solution: Cookbook now detects and handles automatic "Coordinated Universal Time" input
+
+### Technical Details
+- Added production fix for `'Coordinated Universal Time'` → `'Eastern Standard Time'` mapping
+- Enhanced debug logging to show attribute precedence analysis
+- Maintains existing `'America/New_York'` mapping for other deployment methods
+- Forces EST when Windows automatic timezone detection occurs
+
 ## [3.1.1] - 2025-11-10
 
 ### Fixed
