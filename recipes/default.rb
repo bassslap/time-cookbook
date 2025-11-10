@@ -73,8 +73,16 @@ if platform_family?('windows')
   # First, get list of available timezones and map common names to Windows format
   # Add debugging to see what we're actually receiving
   Chef::Log.info("🔍 Windows timezone mapping input: '#{timezone_to_set}' (#{timezone_to_set.class})")
+  Chef::Log.info("🔍 All timezone attributes: #{node['time'].to_hash}")
+  Chef::Log.info("🔍 Override timezone: #{node.override['time']['timezone'] rescue 'none'}")
+  Chef::Log.info("🔍 Default timezone: #{node.default['time']['timezone'] rescue 'none'}")
   
-  windows_timezone = case timezone_to_set.to_s.strip
+  # PRODUCTION FIX: Force EST mapping to match Test Kitchen behavior
+  if timezone_to_set.to_s.strip == 'America/New_York'
+    Chef::Log.info("🔧 PRODUCTION FIX: Forcing America/New_York -> Eastern Standard Time")
+    windows_timezone = 'Eastern Standard Time'
+  else
+    windows_timezone = case timezone_to_set.to_s.strip
                      when 'UTC', 'Coordinated Universal Time'
                        'UTC'
                      when 'America/New_York', 'Eastern Standard Time', 'EST', 'Eastern'
@@ -95,13 +103,19 @@ if platform_family?('windows')
                        'Tokyo Standard Time'
                      when 'Australia/Sydney'
                        'AUS Eastern Standard Time'
-                     else
-                       # If we don't recognize it, try to use it as-is but log a warning
-                       Chef::Log.warn("⚠️  Unknown timezone '#{timezone_to_set}', using as-is. Consider updating the mapping.")
-                       timezone_to_set.to_s.strip
+                       else
+                         # For EST request, default to Eastern Standard Time
+                         if timezone_to_set.to_s.strip.downcase.include?('est') || 
+                            timezone_to_set.to_s.strip.downcase.include?('eastern')
+                           Chef::Log.info("🔧 Detected EST/Eastern request, mapping to Eastern Standard Time")
+                           'Eastern Standard Time'
+                         else
+                           # If we don't recognize it, try to use it as-is but log a warning
+                           Chef::Log.warn("⚠️  Unknown timezone '#{timezone_to_set}', using as-is. Consider updating the mapping.")
+                           timezone_to_set.to_s.strip
+                         end
                      end
-  
-  Chef::Log.info("🔍 Mapped '#{timezone_to_set}' → '#{windows_timezone}' for Windows")
+  end  Chef::Log.info("🔍 Mapped '#{timezone_to_set}' → '#{windows_timezone}' for Windows")
 
   # Use PowerShell to set timezone with validation (more reliable than tzutil)
   powershell_script 'set_windows_timezone' do
@@ -113,33 +127,49 @@ if platform_family?('windows')
         $currentTZ = Get-TimeZone
         Write-Host "Current timezone ID: $($currentTZ.Id)"
         
+        # Handle special case where target is "Coordinated Universal Time" but should be "UTC"
+        $targetTimezone = "#{windows_timezone}"
+        if ($targetTimezone -eq "Coordinated Universal Time") {
+          Write-Host "Mapping 'Coordinated Universal Time' to 'UTC'"
+          $targetTimezone = "UTC"
+        }
+        
         # First, validate that the target timezone exists
-        $targetExists = Get-TimeZone -ListAvailable | Where-Object { $_.Id -eq "#{windows_timezone}" }
+        $targetExists = Get-TimeZone -ListAvailable | Where-Object { $_.Id -eq $targetTimezone }
         if (-not $targetExists) {
-          Write-Host "WARNING: Timezone '#{windows_timezone}' not found. Searching for alternatives..."
+          Write-Host "WARNING: Timezone '$targetTimezone' not found. Searching for alternatives..."
           
-          # Try to find a close match
-          $alternatives = Get-TimeZone -ListAvailable | Where-Object { 
-            $_.Id -like "*Eastern*" -or $_.Id -like "*UTC*" -or $_.DisplayName -like "*Eastern*" -or $_.DisplayName -like "*UTC*"
-          }
-          
-          Write-Host "Available timezone alternatives:"
-          $alternatives | ForEach-Object { Write-Host "  ID: '$($_.Id)', Display: '$($_.DisplayName)'" }
-          
-          # For America/New_York, use Eastern Standard Time
-          if ("#{windows_timezone}" -eq "Eastern Standard Time") {
+          # Try to find a close match based on the original request
+          if ($targetTimezone -like "*Eastern*" -or "#{windows_timezone}" -eq "Eastern Standard Time") {
+            $alternatives = Get-TimeZone -ListAvailable | Where-Object { $_.Id -like "*Eastern*" }
+            Write-Host "Looking for Eastern timezone alternatives:"
+            $alternatives | ForEach-Object { Write-Host "  ID: '$($_.Id)', Display: '$($_.DisplayName)'" }
+            
             $correctId = ($alternatives | Where-Object { $_.Id -eq "Eastern Standard Time" }).Id
             if ($correctId) {
-              Write-Host "Using validated timezone ID: $correctId"
-              $targetTimezone = $correctId
-            } else {
-              throw "Could not find Eastern Standard Time timezone"
+              Write-Host "Using Eastern Standard Time"
+              $targetTimezone = "Eastern Standard Time"
             }
+          } elseif ($targetTimezone -like "*UTC*" -or $targetTimezone -eq "UTC") {
+            # For UTC, just use "UTC"
+            Write-Host "Using UTC timezone"
+            $targetTimezone = "UTC"
           } else {
-            throw "Timezone '#{windows_timezone}' is not available on this system"
+            # List available timezones for debugging
+            Write-Host "Available timezones containing search term:"
+            $allZones = Get-TimeZone -ListAvailable | Where-Object { $_.Id -like "*$targetTimezone*" -or $_.DisplayName -like "*$targetTimezone*" }
+            $allZones | ForEach-Object { Write-Host "  ID: '$($_.Id)', Display: '$($_.DisplayName)'" }
+            
+            if (-not $allZones) {
+              throw "No matching timezone found for '$targetTimezone'"
+            }
           }
-        } else {
-          $targetTimezone = "#{windows_timezone}"
+          
+          # Validate the final target exists
+          $finalExists = Get-TimeZone -ListAvailable | Where-Object { $_.Id -eq $targetTimezone }
+          if (-not $finalExists) {
+            throw "Final timezone '$targetTimezone' is not available on this system"
+          }
         }
       
         if ($currentTZ.Id -ne $targetTimezone) {
@@ -152,8 +182,8 @@ if platform_family?('windows')
         }
       } catch {
         Write-Host "Error setting timezone: $_"
-        Write-Host "Listing all available timezones for debugging..."
-        $allZones = Get-TimeZone -ListAvailable | Sort-Object Id
+        Write-Host "Listing first 20 available timezones for reference..."
+        $allZones = Get-TimeZone -ListAvailable | Sort-Object Id | Select-Object -First 20
         $allZones | ForEach-Object { Write-Host "  ID: '$($_.Id)', Display: '$($_.DisplayName)'" }
         throw "Failed to set timezone to #{windows_timezone}: $_"
       }

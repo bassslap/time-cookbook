@@ -11,7 +11,7 @@ cookbook 'enterprise-time', path: '.'
 # To use different timezone: change this line and run 'chef update'
 # Common options: 'America/New_York' (EST/EDT), 'America/Chicago' (CST/CDT), 'UTC', etc.
 # Using override to beat automatic attributes (AWS sets automatic timezone to UTC)
-override['time']['timezone'] = 'America/New_York'  # EST/EDT timezone
+override['time']['timezone'] = 'Eastern Standard Time'  # EST/EDT timezone (Windows format)
 default['time']['ntp_servers'] = [
   '0.pool.ntp.org',
   '1.pool.ntp.org',

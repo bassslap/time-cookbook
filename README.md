@@ -194,13 +194,14 @@ chef install Policyfile.rb
 chef push production Policyfile.lock.json
 
 # Apply via Chef Automate UI or knife
-knife node run_list add NODE_NAME "recipe[time-cookbook::default]"
+knife node run_list add NODE_NAME "recipe[enterprise-time::default]"
 ```
 
 ### Standalone (chef-solo/chef-zero)
 ```bash
 # Local development or standalone systems
-chef-client --local-mode --override-runlist time-cookbook::default
+# Local development or standalone systems
+chef-client --local-mode --override-runlist enterprise-time::default
 ```
 
 ## Testing & Validation
