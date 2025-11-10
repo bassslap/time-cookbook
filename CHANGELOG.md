@@ -5,7 +5,31 @@ All notable changes to the time-cookbook are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2025-11-04
+## [3.1.0] - 2025-11-10
+
+### Fixed
+- **Production Windows Timezone Issue**: Fixed EST timezone mapping for Chef Automate deployments
+- **Test Kitchen vs Production Parity**: Resolved timezone configuration differences between testing and production
+- **Windows PowerShell Validation**: Enhanced timezone ID validation with comprehensive error handling
+- **Attribute Precedence**: Fixed America/New_York → Eastern Standard Time mapping in production environments
+
+### Added
+- **Enhanced Debugging**: Added comprehensive timezone attribute logging for troubleshooting
+- **Production Timezone Mapping**: Explicit handling for America/New_York timezone in Windows environments
+- **PowerShell Error Recovery**: Improved error handling and alternative timezone detection
+- **IIS PowerShell Module Fix**: Added documentation for WebAdministration module import issues
+
+### Changed
+- **Policyfile Configuration**: Updated to use Windows-native timezone format for consistency
+- **Windows Timezone Logic**: Enhanced PowerShell script with better validation and fallback handling
+- **Error Messages**: Improved debugging output for timezone mapping failures
+
+### Technical Details
+- Root Cause: Test Kitchen used 'Eastern Standard Time' directly, production used 'America/New_York' requiring mapping
+- Solution: Added explicit mapping and updated Policyfile to match Test Kitchen configuration
+- Validation: Enhanced PowerShell timezone validation with comprehensive available timezone listing
+
+## [3.0.0] - 2025-11-04
 
 ### Added
 - **Production Architecture**: Complete redesign using proven Chef Supermarket cookbooks
