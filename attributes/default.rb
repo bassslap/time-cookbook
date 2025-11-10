@@ -8,7 +8,8 @@
 
 # Core time configuration
 # timezone can be overridden in Kitchen suites, roles, or Policyfile
-default['time']['timezone'] = 'America/New_York' # EST/EDT default
+# For direct deployment without Policyfile, use America/New_York (mapping handles Windows)
+default['time']['timezone'] = 'America/New_York' # EST/EDT default - mapped to Windows format in recipe
 default['time']['ntp_service_enabled'] = true
 
 # Intelligent NTP server selection based on platform and region

@@ -85,8 +85,11 @@ if platform_family?('windows')
                                           'none'
                                         end}")
 
-  # PRODUCTION FIX: Force EST mapping to match Test Kitchen behavior
-  if timezone_to_set.to_s.strip == 'America/New_York'
+  # PRODUCTION FIX: Handle automatic attribute override from Windows
+  if timezone_to_set.to_s.strip == 'Coordinated Universal Time'
+    Chef::Log.info('🔧 PRODUCTION FIX: Windows automatic attribute detected, forcing Eastern Standard Time')
+    windows_timezone = 'Eastern Standard Time'
+  elsif timezone_to_set.to_s.strip == 'America/New_York'
     Chef::Log.info('🔧 PRODUCTION FIX: Forcing America/New_York -> Eastern Standard Time')
     windows_timezone = 'Eastern Standard Time'
   else
