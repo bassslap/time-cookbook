@@ -5,6 +5,20 @@ All notable changes to the time-cookbook are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.1] - 2025-11-10
+
+### Fixed
+- **Code Quality Compliance**: Fixed all cookstyle violations (42 auto-corrected issues)
+- **Ruby Syntax Validation**: Resolved syntax error in timezone mapping logic
+- **Code Formatting**: Standardized indentation, spacing, and string literal usage
+- **Production Readiness**: Achieved 100% Chef community coding standards compliance
+
+### Technical Details
+- Auto-corrected 42 cookstyle violations including indentation, spacing, and string literals
+- Fixed syntax error in case statement alignment  
+- Removed trailing whitespace and improved rescue modifier usage
+- All Ruby files now pass syntax validation
+
 ## [3.1.0] - 2025-11-10
 
 ### Fixed
