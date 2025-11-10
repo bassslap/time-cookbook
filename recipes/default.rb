@@ -74,48 +74,58 @@ if platform_family?('windows')
   # Add debugging to see what we're actually receiving
   Chef::Log.info("🔍 Windows timezone mapping input: '#{timezone_to_set}' (#{timezone_to_set.class})")
   Chef::Log.info("🔍 All timezone attributes: #{node['time'].to_hash}")
-  Chef::Log.info("🔍 Override timezone: #{node.override['time']['timezone'] rescue 'none'}")
-  Chef::Log.info("🔍 Default timezone: #{node.default['time']['timezone'] rescue 'none'}")
-  
+  Chef::Log.info("🔍 Override timezone: #{begin
+                                           node.override['time']['timezone']
+                                         rescue
+                                           'none'
+                                         end}")
+  Chef::Log.info("🔍 Default timezone: #{begin
+                                          node.default['time']['timezone']
+                                        rescue
+                                          'none'
+                                        end}")
+
   # PRODUCTION FIX: Force EST mapping to match Test Kitchen behavior
   if timezone_to_set.to_s.strip == 'America/New_York'
-    Chef::Log.info("🔧 PRODUCTION FIX: Forcing America/New_York -> Eastern Standard Time")
+    Chef::Log.info('🔧 PRODUCTION FIX: Forcing America/New_York -> Eastern Standard Time')
     windows_timezone = 'Eastern Standard Time'
   else
     windows_timezone = case timezone_to_set.to_s.strip
-                     when 'UTC', 'Coordinated Universal Time'
-                       'UTC'
-                     when 'America/New_York', 'Eastern Standard Time', 'EST', 'Eastern'
-                       'Eastern Standard Time'
-                     when 'America/Chicago', 'Central Standard Time', 'CST', 'Central'
-                       'Central Standard Time'
-                     when 'America/Denver', 'Mountain Standard Time', 'MST', 'Mountain'
-                       'Mountain Standard Time'
-                     when 'America/Los_Angeles', 'Pacific Standard Time', 'PST', 'Pacific'
-                       'Pacific Standard Time'
-                     when 'America/Phoenix'
-                       'US Mountain Standard Time'
-                     when 'Europe/London', 'GMT'
-                       'GMT Standard Time'
-                     when 'Europe/Paris', 'Europe/Berlin', 'CET'
-                       'W. Europe Standard Time'
-                     when 'Asia/Tokyo', 'JST'
-                       'Tokyo Standard Time'
-                     when 'Australia/Sydney'
-                       'AUS Eastern Standard Time'
+                       when 'UTC', 'Coordinated Universal Time'
+                         'UTC'
+                       when 'America/New_York', 'Eastern Standard Time', 'EST', 'Eastern'
+                         'Eastern Standard Time'
+                       when 'America/Chicago', 'Central Standard Time', 'CST', 'Central'
+                         'Central Standard Time'
+                       when 'America/Denver', 'Mountain Standard Time', 'MST', 'Mountain'
+                         'Mountain Standard Time'
+                       when 'America/Los_Angeles', 'Pacific Standard Time', 'PST', 'Pacific'
+                         'Pacific Standard Time'
+                       when 'America/Phoenix'
+                         'US Mountain Standard Time'
+                       when 'Europe/London', 'GMT'
+                         'GMT Standard Time'
+                       when 'Europe/Paris', 'Europe/Berlin', 'CET'
+                         'W. Europe Standard Time'
+                       when 'Asia/Tokyo', 'JST'
+                         'Tokyo Standard Time'
+                       when 'Australia/Sydney'
+                         'AUS Eastern Standard Time'
                        else
                          # For EST request, default to Eastern Standard Time
-                         if timezone_to_set.to_s.strip.downcase.include?('est') || 
+                         if timezone_to_set.to_s.strip.downcase.include?('est') ||
                             timezone_to_set.to_s.strip.downcase.include?('eastern')
-                           Chef::Log.info("🔧 Detected EST/Eastern request, mapping to Eastern Standard Time")
+                           Chef::Log.info('🔧 Detected EST/Eastern request, mapping to Eastern Standard Time')
                            'Eastern Standard Time'
                          else
                            # If we don't recognize it, try to use it as-is but log a warning
                            Chef::Log.warn("⚠️  Unknown timezone '#{timezone_to_set}', using as-is. Consider updating the mapping.")
                            timezone_to_set.to_s.strip
                          end
-                     end
-  end  Chef::Log.info("🔍 Mapped '#{timezone_to_set}' → '#{windows_timezone}' for Windows")
+                       end
+  end
+
+  Chef::Log.info("🔍 Mapped '#{timezone_to_set}' → '#{windows_timezone}' for Windows")
 
   # Use PowerShell to set timezone with validation (more reliable than tzutil)
   powershell_script 'set_windows_timezone' do
@@ -126,25 +136,25 @@ if platform_family?('windows')
       try {
         $currentTZ = Get-TimeZone
         Write-Host "Current timezone ID: $($currentTZ.Id)"
-        
+      #{'  '}
         # Handle special case where target is "Coordinated Universal Time" but should be "UTC"
         $targetTimezone = "#{windows_timezone}"
         if ($targetTimezone -eq "Coordinated Universal Time") {
           Write-Host "Mapping 'Coordinated Universal Time' to 'UTC'"
           $targetTimezone = "UTC"
         }
-        
+      #{'  '}
         # First, validate that the target timezone exists
         $targetExists = Get-TimeZone -ListAvailable | Where-Object { $_.Id -eq $targetTimezone }
         if (-not $targetExists) {
           Write-Host "WARNING: Timezone '$targetTimezone' not found. Searching for alternatives..."
-          
+      #{'    '}
           # Try to find a close match based on the original request
           if ($targetTimezone -like "*Eastern*" -or "#{windows_timezone}" -eq "Eastern Standard Time") {
             $alternatives = Get-TimeZone -ListAvailable | Where-Object { $_.Id -like "*Eastern*" }
             Write-Host "Looking for Eastern timezone alternatives:"
             $alternatives | ForEach-Object { Write-Host "  ID: '$($_.Id)', Display: '$($_.DisplayName)'" }
-            
+      #{'      '}
             $correctId = ($alternatives | Where-Object { $_.Id -eq "Eastern Standard Time" }).Id
             if ($correctId) {
               Write-Host "Using Eastern Standard Time"
@@ -159,19 +169,19 @@ if platform_family?('windows')
             Write-Host "Available timezones containing search term:"
             $allZones = Get-TimeZone -ListAvailable | Where-Object { $_.Id -like "*$targetTimezone*" -or $_.DisplayName -like "*$targetTimezone*" }
             $allZones | ForEach-Object { Write-Host "  ID: '$($_.Id)', Display: '$($_.DisplayName)'" }
-            
+      #{'      '}
             if (-not $allZones) {
               throw "No matching timezone found for '$targetTimezone'"
             }
           }
-          
+      #{'    '}
           # Validate the final target exists
           $finalExists = Get-TimeZone -ListAvailable | Where-Object { $_.Id -eq $targetTimezone }
           if (-not $finalExists) {
             throw "Final timezone '$targetTimezone' is not available on this system"
           }
         }
-      
+
         if ($currentTZ.Id -ne $targetTimezone) {
           Write-Host "Setting timezone to $targetTimezone..."
           Set-TimeZone -Id $targetTimezone -ErrorAction Stop
@@ -313,7 +323,7 @@ if platform_family?('rhel', 'debian', 'amazon')
   # Check if we have an explicit timezone setting (not the automatic UTC)
   override_tz = node.override['time'] && node.override['time']['timezone'] && !node.override['time']['timezone'].empty? ? node.override['time']['timezone'] : nil
   default_tz = node.default['time'] && node.default['time']['timezone'] && !node.default['time']['timezone'].empty? ? node.default['time']['timezone'] : nil
-  
+
   if desired_timezone == 'UTC' && (override_tz || default_tz)
     # Use the explicitly configured timezone instead of automatic UTC
     timezone_to_set = override_tz || default_tz
