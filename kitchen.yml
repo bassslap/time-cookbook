@@ -1,1 +1,132 @@
-.kitchen.aws.yml
+---
+driver:
+  name: ec2
+  aws_ssh_key_id: chef-testing
+  region: us-east-1
+  availability_zone: us-east-1a
+  require_chef_omnibus: true
+  instance_type: t3.small
+  associate_public_ip: true
+  interface: dns
+  # Global timeout settings (can be overridden per platform)
+  retryable_tries: 60      # Default wait time for instances
+  retryable_sleep: 5       # Default check interval
+  tags:
+    Project: 'chef-cookbook-testing'
+    Cookbook: 'enterprise-time'
+    CreatedBy: 'test-kitchen'
+
+provisioner:
+  name: chef_infra
+  install_strategy: always
+  policyfile: Policyfile.rb
+  chef_license: accept-silent
+
+verifier:
+  name: inspec
+
+platforms:
+  # Modern Linux Platforms
+  - name: ubuntu-22.04
+    driver:
+      image_id: ami-0c02fb55956c7d316  # Ubuntu 22.04 LTS us-east-1
+    transport:
+      name: ssh
+      username: ubuntu
+      ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
+  
+  - name: amazon-linux-2023
+    driver:
+      image_id: ami-0a3c3a20c09d6f377  # Amazon Linux 2023 us-east-1
+    transport:
+      name: ssh  
+      username: ec2-user
+      ssh_key: <%= ENV['AWS_SSH_KEY_PATH'] || '~/.ssh/chef-testing.pem' %>
+
+  # Modern Windows Platforms  
+  - name: windows-2022
+    driver:
+      image_id: ami-043cc489b5239c3de  # Windows Server 2022 Base 2025.10.15 (latest)
+      instance_type: t3.medium
+      # Extend timeouts for Windows password retrieval and initialization
+      retryable_tries: 120  # Wait up to 20 minutes for instance ready  
+      retryable_sleep: 10   # Check every 10 seconds
+      aws_ssh_key_id: chef-testing  # Ensure SSH key is explicit
+      # Additional Windows-specific settings
+      skip_cost_warning: true
+      ebs_optimized: false
+      # Force specific user data for Windows password setup
+      user_data: |
+        <powershell>
+        # Ensure WinRM is properly configured
+        Enable-PSRemoting -Force -SkipNetworkProfileCheck
+        Set-NetFirewallRule -Name "WINRM-HTTP-In-TCP-PUBLIC" -RemoteAddress Any
+        winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+        winrm set winrm/config/service/auth '@{Basic="true"}'
+        </powershell>
+    transport:
+      name: winrm
+      username: administrator
+      elevated: true
+      # Extend WinRM connection timeouts
+      max_wait_until_ready: 900    # 15 minutes for Windows boot
+      connection_retries: 10       # More connection attempts
+      connection_retry_sleep: 30   # Wait 30s between retries
+
+  - name: windows-2019
+    driver:
+      image_id: ami-0c2d3e23b7708db96  # Windows Server 2019 us-east-1
+      instance_type: t3.medium
+      # Extended timeouts for Windows
+      retryable_tries: 120
+      retryable_sleep: 10
+      aws_ssh_key_id: chef-testing
+    transport:
+      name: winrm
+      username: administrator
+      elevated: true
+      # Extended WinRM timeouts
+      max_wait_until_ready: 900
+      connection_retries: 10
+      connection_retry_sleep: 30
+
+suites:
+  - name: default
+    run_list:
+      - recipe[enterprise-time::default]
+    attributes:
+      time:
+        timezone: "America/New_York"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+          - "2.pool.ntp.org"
+          - "3.pool.ntp.org"
+  
+  - name: enterprise-linux
+    run_list:
+      - recipe[enterprise-time::default]
+    includes:
+      - ubuntu-22.04
+      - amazon-linux-2023
+    attributes:
+      time:
+        timezone: "America/New_York"  # EST/EDT
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+  
+  - name: enterprise-windows
+    run_list:
+      - recipe[enterprise-time::default]
+    includes:
+      - windows-2022
+      - windows-2019
+    attributes:
+      time:
+        timezone: "Eastern Standard Time"
+        ntp_servers:
+          - "0.pool.ntp.org"
+          - "1.pool.ntp.org"
+          - "2.pool.ntp.org"
+          - "3.pool.ntp.org"
