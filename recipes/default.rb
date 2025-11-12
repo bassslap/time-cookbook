@@ -228,89 +228,78 @@ if platform_family?('windows')
   end
 
 else
-  Chef::Log.info('Configuring Linux NTP services')
+  # LINUX SYSTEMS - Use NTP Supermarket Cookbook
+  Chef::Log.info('Configuring Linux NTP services using NTP supermarket cookbook')
 
-  # Smart NTP package detection based on platform and version
-  case node['platform_family']
-  when 'debian'
-    # Ubuntu 22.04+ and newer Debian use chrony
-    if platform?('ubuntu') && node['platform_version'].to_f >= 22.04
-      Chef::Log.info('Detected Ubuntu 22.04+, using chrony')
+  # Map our attributes to the NTP cookbook attributes
+  node.default['ntp']['servers'] = node['time']['ntp_servers']
+  node.default['ntp']['server']['use_iburst'] = true
+  node.default['ntp']['sync_clock'] = false
+  node.default['ntp']['sync_hw_clock'] = false
 
-      package 'chrony' do
-        action :install
-      end
+  # Check platform compatibility with NTP cookbook
+  # Amazon Linux 2023, RHEL 8+, and Ubuntu 22.04+ use chrony (not classic NTP)
+  if (platform?('amazon') && node['platform_version'].to_i >= 2023) ||
+     (platform_family?('rhel') && !platform?('amazon') && node['platform_version'].to_i >= 8)
+    Chef::Log.warn("Note: #{node['platform']} #{node['platform_version']} does not include classic NTP, using chrony instead")
 
-      # Configure chrony with NTP servers
-      template '/etc/chrony.conf' do
-        source 'chrony.conf.erb'
-        owner 'root'
-        group 'root'
-        mode '0644'
-        variables(
-          ntp_servers: node['time']['ntp_servers']
-        )
-        notifies :restart, 'service[chronyd]', :delayed
-      end
-
-      service 'chronyd' do
-        action [:enable, :start]
-      end
-
-    else
-      Chef::Log.info('Detected older Ubuntu/Debian, using ntp')
-
-      package 'ntp' do
-        action :install
-      end
-
-      service 'ntp' do
-        action [:enable, :start]
-      end
+    # Use chrony directly since NTP cookbook doesn't support these platforms
+    package 'chrony' do
+      action :install
     end
 
-  when 'rhel', 'amazon'
-    # Amazon Linux 2023+ uses chrony, older versions use ntp
-    if (platform?('amazon') && node['platform_version'].to_i >= 2023) ||
-       (platform_family?('rhel') && node['platform_version'].to_i >= 8)
-      Chef::Log.info('Detected modern RHEL/Amazon Linux, using chrony')
-
-      package 'chrony' do
-        action :install
-      end
-
-      # Configure chrony with NTP servers
-      template '/etc/chrony.conf' do
-        source 'chrony.conf.erb'
-        owner 'root'
-        group 'root'
-        mode '0644'
-        variables(
-          ntp_servers: node['time']['ntp_servers']
-        )
-        notifies :restart, 'service[chronyd]', :delayed
-      end
-
-      service 'chronyd' do
-        action [:enable, :start]
-      end
-
-    else
-      Chef::Log.info('Detected older RHEL/Amazon Linux, using ntp')
-
-      package 'ntp' do
-        action :install
-      end
-
-      service 'ntpd' do
-        action [:enable, :start]
-      end
+    template '/etc/chrony.conf' do
+      source 'chrony.conf.erb'
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        ntp_servers: node['time']['ntp_servers']
+      )
+      notifies :restart, 'service[chronyd]', :delayed
     end
+
+    service 'chronyd' do
+      action [:enable, :start]
+    end
+
+    Chef::Log.info("✅ Configured chrony for #{node['platform']} #{node['platform_version']}")
+  elsif platform?('ubuntu') && node['platform_version'].to_f >= 22.04
+    Chef::Log.warn('Note: Ubuntu 22.04+ uses chrony by default, using chrony instead of classic NTP')
+
+    # For Ubuntu 22.04+, use chrony directly
+    package 'chrony' do
+      action :install
+    end
+
+    template '/etc/chrony.conf' do
+      source 'chrony.conf.erb'
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        ntp_servers: node['time']['ntp_servers']
+      )
+      notifies :restart, 'service[chronyd]', :delayed
+    end
+
+    service 'chronyd' do
+      action [:enable, :start]
+    end
+
+    Chef::Log.info('✅ Configured chrony for Ubuntu 22.04+')
+  else
+    # Use NTP supermarket cookbook for compatible platforms (older Ubuntu, Debian, older RHEL/Amazon Linux)
+    Chef::Log.info('Using NTP supermarket cookbook for classic NTP configuration')
+    include_recipe 'ntp::default'
+
+    Chef::Log.info('✅ Configured NTP using supermarket cookbook')
+    Chef::Log.info("NTP servers: #{node['ntp']['servers'].join(', ')}")
   end
 
   # Log platform-specific enhancements
-  log 'ntp_platform_config' do
-    message "Applied #{node['platform_family']} NTP configuration for #{node['platform']} #{node['platform_version']}"
+  log 'ntp_supermarket_config' do
+    message "Applied NTP configuration for #{node['platform']} #{node['platform_version']} using #{platform_family?('rhel') && node['platform_version'].to_i >= 8 || (platform?('ubuntu') && node['platform_version'].to_f >= 22.04) ? 'chrony' : 'NTP supermarket cookbook'}"
     level :info
   end
 end

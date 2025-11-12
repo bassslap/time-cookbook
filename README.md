@@ -8,46 +8,58 @@
 
 ## Overview
 
-This cookbook provides enterprise-grade time management across Windows and Linux environments, leveraging proven Chef Supermarket cookbooks for maximum reliability and maintainability. Built for production use with comprehensive testing and professional support.
+This cookbook provides enterprise-grade time management across Windows and Linux environments. Choose between a fully self-contained implementation or leverage the proven Chef Supermarket NTP cookbook for enhanced Linux NTP management.
 
 ### Key Benefits
 
-- **Production Reliability**: Built on battle-tested Supermarket cookbooks with 500k+ downloads
+- **Flexible Architecture**: Self-contained OR with optional Supermarket cookbook integration
 - **Hybrid Platform Support**: Seamless operation across Windows and Linux environments  
-- **Modern Architecture**: Uses Policyfiles for dependency management (no Berksfile required)
+- **Modern Implementation**: Native W32Time on Windows, smart NTP/chrony detection on Linux
 - **Enterprise Ready**: Comprehensive testing, monitoring, and professional documentation
-- **Low Maintenance**: Leverages community cookbooks for automatic platform updates
+- **Two Deployment Options**:
+  - **Self-Contained**: No external dependencies, fully custom implementation
+  - **Supermarket Enhanced**: Leverage battle-tested NTP cookbook (5.2.5) for Linux
 
-## Architecture
+## Recipes
 
-### Foundation Cookbooks
-- **[ntp](https://supermarket.chef.io/cookbooks/ntp) (~3.7.0)**: Industry-standard NTP configuration
-- **[timezone](https://supermarket.chef.io/cookbooks/timezone) (~0.2.0)**: Cross-platform timezone management
-- **[windows](https://supermarket.chef.io/cookbooks/windows) (~9.1.0)**: Advanced Windows platform resources
+### Main Recipes
 
-### Enhanced Recipes
-- `supermarket.rb`: Main orchestration using community cookbooks
-- `ntp_enhancements.rb`: Linux platform optimizations
-- `ntp_windows_enhanced.rb`: Enterprise Windows time configuration
+- **`default.rb`**: Self-contained cross-platform implementation (no dependencies)
+- **`with_ntp_supermarket.rb`**: Enhanced Linux NTP using Supermarket cookbook
+
+### NTP Supermarket Integration (NEW)
+
+We now support optional integration with the [NTP Supermarket Cookbook](https://supermarket.chef.io/cookbooks/ntp) (v5.2.5):
+
+- **Community Maintained**: Active maintenance by Sous Chefs
+- **Battle Tested**: 93 versions, 500k+ downloads
+- **Comprehensive Features**: Pools, peers, statistics, leapseconds, AppArmor
+- **Platform Specific**: Handles platform differences automatically
+
+See [NTP_SUPERMARKET_INTEGRATION.md](NTP_SUPERMARKET_INTEGRATION.md) for detailed integration guide.
 
 ## Quick Start
 
-### Basic Usage
+### Option 1: Self-Contained (Default)
 ```ruby
-# In your run_list or Policyfile
-run_list "recipe[enterprise-time::default]"
+# In your Policyfile.rb
+run_list 'enterprise-time::default'
+
+default['time']['timezone'] = 'America/New_York'
+default['time']['ntp_servers'] = [
+  '0.pool.ntp.org',
+  '1.pool.ntp.org',
+  '2.pool.ntp.org'
+]
 ```
 
-### Custom Configuration  
+### Option 2: With NTP Supermarket Cookbook
 ```ruby
-# Node attributes or role configuration
-default_attributes(
-  'time' => {
-    'timezone' => 'America/New_York',
-    'ntp_servers' => [
-      '0.north-america.pool.ntp.org',
-      '1.north-america.pool.ntp.org',
-      '2.north-america.pool.ntp.org'
+# In your Policyfile.rb
+cookbook 'enterprise-time', path: '.'
+cookbook 'ntp', '~> 5.2.5', :supermarket
+
+run_list 'enterprise-time::with_ntp_supermarket'
     ]
   }
 )

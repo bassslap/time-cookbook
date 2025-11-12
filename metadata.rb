@@ -3,10 +3,11 @@ maintainer 'Progress Software Corporation - SA Team - POC Demo'
 maintainer_email 'bryan.phillips@progress.com'
 license 'Apache-2.0'
 description 'Cross-platform time management cookbook with real W32Time and smart NTP detection'
-version '3.1.2'
+version '3.2.0'
 chef_version '>= 16.0'
 
-# No external dependencies - fully self-contained
+# External dependencies
+depends 'ntp', '~> 5.2.5'
 
 # Platform support
 supports 'windows', '>= 2012.0'

@@ -1,11 +1,17 @@
-# Enterprise-time cookbook Policyfile - standalone with no external dependencies
+# Enterprise-time cookbook Policyfile - with NTP supermarket cookbook
 name 'enterprise_time_policy'
+
+# Supermarket source
+default_source :supermarket
 
 # Default run list
 run_list 'enterprise-time::default'
 
-# Local cookbook only
+# Local cookbook
 cookbook 'enterprise-time', path: '.'
+
+# NTP supermarket cookbook dependency
+cookbook 'ntp', '~> 5.2.5'
 
 # Default attributes - easily configurable
 # To use different timezone: change this line and run 'chef update'
