@@ -1,103 +1,222 @@
 # Enterprise Time Cookbook
 
-**Production-ready time synchronization and timezone management for enterprise hybrid environments**
+**Production-ready time synchronization and timezone management for modern enterprise environments**
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Chef Version](https://img.shields.io/badge/Chef-16%2B-orange.svg)](https://chef.io)
-[![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20Linux-green.svg)](https://github.com/bassslap/time-cookbook)
 
 ## Overview
 
-This cookbook provides enterprise-grade time management across Windows and Linux environments. Choose between a fully self-contained implementation or leverage the proven Chef Supermarket NTP cookbook for enhanced Linux NTP management.
+Enterprise-grade time management cookbook for hybrid Windows/Linux environments. Features native implementations with Chef's built-in resources and the chrony supermarket cookbook.
 
-### Key Benefits
+### Key Features
 
-- **Flexible Architecture**: Self-contained OR with optional Supermarket cookbook integration
-- **Hybrid Platform Support**: Seamless operation across Windows and Linux environments  
-- **Modern Implementation**: Native W32Time on Windows, smart NTP/chrony detection on Linux
-- **Enterprise Ready**: Comprehensive testing, monitoring, and professional documentation
-- **Two Deployment Options**:
-  - **Self-Contained**: No external dependencies, fully custom implementation
-  - **Supermarket Enhanced**: Leverage battle-tested NTP cookbook (5.2.5) for Linux
+- ✅ **Native Chef Resources**: Uses Chef's built-in `timezone` resource
+- ✅ **Modern Platforms**: Ubuntu 22.04+, Amazon Linux 2023+, Windows Server 2022+
+- ✅ **Chrony Integration**: Leverages chrony supermarket cookbook for Linux NTP
+- ✅ **W32Time Native**: Direct Windows time service management
+- ✅ **Simplified Architecture**: Clean separation between Windows and Linux recipes
 
-## Recipes
+## Platform Support
 
-### Main Recipes
-
-- **`default.rb`**: Self-contained cross-platform implementation (no dependencies)
-- **`with_ntp_supermarket.rb`**: Enhanced Linux NTP using Supermarket cookbook
-
-### NTP Supermarket Integration (NEW)
-
-We now support optional integration with the [NTP Supermarket Cookbook](https://supermarket.chef.io/cookbooks/ntp) (v5.2.5):
-
-- **Community Maintained**: Active maintenance by Sous Chefs
-- **Battle Tested**: 93 versions, 500k+ downloads
-- **Comprehensive Features**: Pools, peers, statistics, leapseconds, AppArmor
-- **Platform Specific**: Handles platform differences automatically
-
-See [NTP_SUPERMARKET_INTEGRATION.md](NTP_SUPERMARKET_INTEGRATION.md) for detailed integration guide.
+| Platform | Versions | NTP Service | Timezone Management |
+|----------|----------|-------------|---------------------|
+| **Windows Server** | 2022+ | W32Time (native) | Chef `timezone` resource |
+| **Ubuntu** | 22.04+ | chrony | Chef `timezone` resource |
+| **Amazon Linux** | 2023+ | chrony | Chef `timezone` resource |
+| **RHEL/Rocky** | 8+ | chrony | Chef `timezone` resource |
 
 ## Quick Start
 
-### Option 1: Self-Contained (Default)
+### 1. Add to Policyfile
+
 ```ruby
-# In your Policyfile.rb
+# Policyfile.rb
+name 'production_policy'
+
+default_source :supermarket
+
 run_list 'enterprise-time::default'
 
-default['time']['timezone'] = 'America/New_York'
+cookbook 'enterprise-time', path: '.'
+
+# Configure timezone and NTP servers
+override['time']['timezone'] = 'America/New_York'
 default['time']['ntp_servers'] = [
   '0.pool.ntp.org',
   '1.pool.ntp.org',
-  '2.pool.ntp.org'
+  '2.pool.ntp.org',
+  '3.pool.ntp.org'
 ]
 ```
 
-### Option 2: With NTP Supermarket Cookbook
-```ruby
-# In your Policyfile.rb
-cookbook 'enterprise-time', path: '.'
-cookbook 'ntp', '~> 5.2.5', :supermarket
+### 2. Update and Upload Policy
 
-run_list 'enterprise-time::with_ntp_supermarket'
-    ]
-  }
-)
+```bash
+# Update the policy lock
+chef update Policyfile.rb
+
+# Push to Chef Server
+chef push production Policyfile.rb
 ```
-## Platform Support
 
-| Platform | Versions | NTP Service | Notes |
-|----------|----------|-------------|-------|
-| **Windows Server** | 2012+ | W32Time | Production validated |
-| **Ubuntu** | 18.04+ | ntp/systemd-timesyncd | LTS versions supported |
-| **RHEL/CentOS** | 7+ | ntp/chrony | Enterprise distributions |
-| **Amazon Linux** | 2+ | chrony | Cloud-optimized |
-| **Debian** | 9+ | ntp | Stable releases |
+### 3. Apply to Nodes
+
+```bash
+# Set policy on a node
+knife node policy set node-linux-04 production production_policy
+
+# Or during bootstrap
+knife bootstrap 10.10.3.4 -N node-linux-04 -U ubuntu --sudo \\
+  -i ~/.ssh/sys_admin.pem \\
+  --policy-name production \\
+  --policy-group production_policy
+```
 
 ## Configuration
 
-### Core Attributes
+### Attributes
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `['time']['timezone']` | String | `'UTC'` | System timezone (IANA format for Linux, Windows format for Windows) |
-| `['time']['ntp_servers']` | Array | Regional pool servers | NTP servers for time synchronization |
+| `['time']['timezone']` | String | `'America/New_York'` | Timezone (IANA format for Linux, Windows ID for Windows) |
+| `['time']['ntp_servers']` | Array | `['0.pool.ntp.org', ...]` | NTP servers for time synchronization |
 
-### Example Configurations
+### Timezone Format Examples
 
-#### Corporate Environment
+**Linux (IANA format):**
+- `America/New_York` - Eastern Time
+- `America/Chicago` - Central Time
+- `America/Los_Angeles` - Pacific Time
+- `UTC` - Coordinated Universal Time
+
+**Windows (Windows Time Zone ID):**
+- `Eastern Standard Time`
+- `Central Standard Time`
+- `Pacific Standard Time`
+- `UTC`
+
+The cookbook automatically maps common IANA formats to Windows IDs.
+
+## Usage Examples
+
+### Basic Policy Setup
+
 ```ruby
-# Policyfile.rb or role configuration
-default['time']['timezone'] = 'UTC'
+# Policyfile.rb - Simple production policy
+name 'production_policy'
+default_source :supermarket
+run_list 'enterprise-time::default'
+cookbook 'enterprise-time', path: '.'
+
+override['time']['timezone'] = 'America/New_York'
+default['time']['ntp_servers'] = ['0.pool.ntp.org', '1.pool.ntp.org']
+```
+
+### Corporate NTP Servers
+
+```ruby
+# Use corporate NTP infrastructure
 default['time']['ntp_servers'] = [
-  'ntp1.company.com',      # Primary corporate NTP
-  'ntp2.company.com',      # Secondary corporate NTP
-  '0.pool.ntp.org'         # Public fallback
+  'ntp1.company.com',
+  'ntp2.company.com',
+  '0.pool.ntp.org'  # Public fallback
 ]
 ```
 
-#### Multi-Region Deployment
+### Multi-Region Deployment
+
 ```ruby
+# Different policies for different regions
+# Policyfile-east.rb
+override['time']['timezone'] = 'America/New_York'
+default['time']['ntp_servers'] = ['0.north-america.pool.ntp.org']
+
+# Policyfile-west.rb
+override['time']['timezone'] = 'America/Los_Angeles'
+default['time']['ntp_servers'] = ['0.north-america.pool.ntp.org']
+```
+
+### Bootstrap Examples
+
+**Linux Node:**
+```bash
+knife bootstrap 10.10.3.4 -N node-linux-04 -U ubuntu --sudo \\
+  -i ~/.ssh/sys_admin.pem \\
+  -r "recipe[enterprise-time]"
+```
+
+**Windows Node:**
+```bash
+knife bootstrap 10.10.3.7 -N node-win-01 -U administrator \\
+  -P 'password' --connection-protocol winrm \\
+  -r "recipe[enterprise-time]"
+```
+
+### Apply Policy to Existing Nodes
+
+```bash
+# Set policy on multiple nodes
+knife node policy set node-linux-04 production combined_policy
+knife node policy set node-linux-05 production combined_policy
+knife node policy set node-win-01 production combined_policy
+
+# Trigger Chef run
+knife ssh "policy_name:production" "sudo chef-client" -x ubuntu -i ~/.ssh/sys_admin.pem
+```
+
+## Recipes
+
+- **`default.rb`**: Platform detection and includes appropriate recipe
+- **`linux.rb`**: Linux-specific configuration (chrony + timezone)
+- **`windows.rb`**: Windows-specific configuration (W32Time + timezone)
+
+## Dependencies
+
+- **chrony** (`~> 1.2.6`) - Supermarket cookbook for Linux NTP management
+
+## Testing
+
+### Test Kitchen
+
+```bash
+# List instances
+kitchen list
+
+# Test Linux
+kitchen converge default-amazon-linux-2023
+kitchen verify default-amazon-linux-2023
+
+# Test Windows (requires AWS setup)
+kitchen converge default-windows-2022
+```
+
+### Supported Test Platforms
+
+- Amazon Linux 2023
+- Ubuntu 22.04
+- Windows Server 2022
+
+## Architecture
+
+### Linux (Ubuntu 22.04+, Amazon Linux 2023+)
+1. **Chrony Supermarket Cookbook** manages NTP service and configuration
+2. **Chef timezone resource** sets system timezone
+3. Idempotent and follows Chef best practices
+
+### Windows (Server 2022+)
+1. **Native W32Time** service configuration via registry
+2. **w32tm** commands for NTP server configuration
+3. **Chef timezone resource** sets system timezone
+4. Full time synchronization and verification
+
+## License
+
+Apache License 2.0
+
+## Maintainer
+
+Progress Software Corporation - SA Team
 # US East Coast
 default['time']['timezone'] = 'America/New_York'
 default['time']['ntp_servers'] = [

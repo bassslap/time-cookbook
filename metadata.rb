@@ -2,12 +2,12 @@ name 'enterprise-time'
 maintainer 'Progress Software Corporation - SA Team - POC Demo'
 maintainer_email 'bryan.phillips@progress.com'
 license 'Apache-2.0'
-description 'Cross-platform time management cookbook with real W32Time and smart NTP detection'
-version '3.2.0'
+description 'Cross-platform time management cookbook with native W32Time and chrony'
+version '4.1.0'
 chef_version '>= 16.0'
 
 # External dependencies
-depends 'ntp', '~> 5.2.5'
+depends 'chrony', '~> 1.2.6'
 
 # Platform support
 supports 'windows', '>= 2012.0'

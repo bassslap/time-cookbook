@@ -92,16 +92,11 @@ platforms:
 
 suites:
   - name: default
-    run_list:
-      - recipe[enterprise-time::default]
     attributes:
       time:
-        timezone: "America/New_York"
-        ntp_servers:
-          - "0.pool.ntp.org"
-          - "1.pool.ntp.org"
-          - "2.pool.ntp.org"
-          - "3.pool.ntp.org"
+        timezone: 'America/New_York'
+    run_list:
+      - recipe[enterprise-time::default]
   
   - name: enterprise-linux
     run_list:
@@ -109,12 +104,6 @@ suites:
     includes:
       - ubuntu-22.04
       - amazon-linux-2023
-    attributes:
-      time:
-        timezone: "America/New_York"  # EST/EDT
-        ntp_servers:
-          - "0.pool.ntp.org"
-          - "1.pool.ntp.org"
   
   - name: enterprise-windows
     run_list:
@@ -122,11 +111,3 @@ suites:
     includes:
       - windows-2022
       - windows-2019
-    attributes:
-      time:
-        timezone: "Eastern Standard Time"
-        ntp_servers:
-          - "0.pool.ntp.org"
-          - "1.pool.ntp.org"
-          - "2.pool.ntp.org"
-          - "3.pool.ntp.org"

@@ -74,16 +74,23 @@ describe 'Time and NTP configuration' do
       it { should be_running }
     end
 
-    # Check timezone configuration
+    # Check timezone configuration - MUST be America/New_York (EST/EDT)
     if file('/usr/bin/timedatectl').exist?
       describe command('timedatectl status') do
         its('exit_status') { should eq 0 }
         its('stdout') { should match(/Time zone:/) }
       end
+
+      # Verify timezone is set to America/New_York (EST/EDT)
+      describe command('timedatectl show --property=Timezone --value') do
+        its('exit_status') { should eq 0 }
+        its('stdout.strip') { should eq 'America/New_York' }
+      end
     else
       describe file('/etc/timezone') do
         it { should exist }
         it { should be_file }
+        its('content') { should match(/America\/New_York/) }
       end
 
       describe file('/etc/localtime') do

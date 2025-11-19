@@ -7,9 +7,9 @@
 # Production-ready time management attributes with intelligent platform defaults
 
 # Core time configuration
-# timezone can be overridden in Kitchen suites, roles, or Policyfile
-# For direct deployment without Policyfile, use America/New_York (mapping handles Windows)
-default['time']['timezone'] = 'America/New_York' # EST/EDT default - mapped to Windows format in recipe
+# timezone MUST be set via Policyfile, role, or wrapper cookbook
+# No default value set here to allow Policyfile override attributes to take precedence
+# Example in Policyfile.rb: override['time']['timezone'] = 'America/New_York'
 default['time']['ntp_service_enabled'] = true
 
 # Intelligent NTP server selection based on platform and region
