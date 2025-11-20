@@ -44,7 +44,6 @@ Chef::Log.info("✅ Configured chrony with NTP servers: #{node['time']['ntp_serv
 timezone_to_set = 'America/New_York'
 
 Chef::Log.info("Setting Linux timezone to: #{timezone_to_set}")
-Chef::Log.info("Setting Linux timezone to: #{timezone_to_set}")
 
 # *** CHEF BUILT-IN RESOURCE ***
 # Using Chef Infra Client's native timezone resource (no external dependency)
