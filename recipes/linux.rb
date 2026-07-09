@@ -21,14 +21,15 @@
 
 Chef::Log.info("Configuring chrony NTP service for #{node['platform']} #{node['platform_version']}")
 
-# Map our attributes to the chrony cookbook attributes
-node.default['chrony']['servers'] = node['time']['ntp_servers']
-node.default['chrony']['sync_clock'] = true
+chrony_servers = {}
 
-# *** SUPERMARKET COOKBOOK ***
-# Including chrony cookbook from Chef Supermarket (external dependency)
-include_recipe 'chrony::default'
-# *** END SUPERMARKET COOKBOOK ***
+node['time']['ntp_servers'].each do |server|
+  chrony_servers[server] = 'iburst'
+end
+
+chrony_config 'default' do
+  servers chrony_servers
+end
 
 Chef::Log.info("✅ Configured chrony with NTP servers: #{node['time']['ntp_servers'].join(', ')}")
 
