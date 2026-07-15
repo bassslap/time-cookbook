@@ -3,7 +3,7 @@ maintainer 'Progress Software Corporation - SA Team - POC Demo'
 maintainer_email 'bryan.phillips@progress.com'
 license 'Apache-2.0'
 description 'Cross-platform time management cookbook with native W32Time and chrony'
-version '4.1.2'
+version '4.1.3'
 chef_version '>= 16.0'
 
 # External dependencies
