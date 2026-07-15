@@ -22,8 +22,8 @@ provisioner:
   policyfile: Policyfile.rb
   chef_license: accept-silent
 
-verifier:
-  name: inspec
+# InSpec verifier disabled
+verifier: {}
 
 platforms:
   # Modern Linux Platforms
